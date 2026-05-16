@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>DXF Zone Generator - 2D/3D</title>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .header {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .header h1 {
+        color: #667eea;
+        font-size: 1.5rem;
+    }
+
+    .home-link {
+        padding: 10px 20px;
+        background: #667eea;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background 0.3s;
+    }
+
+    .home-link:hover {
+        background: #5a67d8;
+    }
+
+    .card {
+        background: white;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .upload-area {
+        border: 2px dashed #667eea;
+        border-radius: 10px;
+        padding: 40px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin-bottom: 20px;
+    }
+
+    .upload-area:hover {
+        background: #f7fafc;
+        border-color: #5a67d8;
+    }
+
+    .upload-area.drag-over {
+        background: #ebf8ff;
+        border-color: #4299e1;
+    }
+
+    .file-input {
+        display: none;
+    }
+
+    .upload-icon {
+        font-size: 48px;
+        margin-bottom: 10px;
+    }
+
+    .file-info {
+        margin-top: 10px;
+        color: #718096;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 12px;
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .btn:hover:not(:disabled) {
+        background: #5a67d8;
+    }
+
+    .btn:disabled {
+        background: #cbd5e0;
+        cursor: not-allowed;
+    }
+
+    .progress {
+        margin-top: 20px;
+        display: none;
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 30px;
+        background: #edf2f7;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: #48bb78;
+        transition: width 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+    }
+
+    .result {
+        margin-top: 20px;
+        display: none;
+    }
+
+    .result-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .result-btn {
+        flex: 1;
+        background: #48bb78;
+    }
+
+    .result-btn:hover {
+        background: #38a169;
+    }
+
+    .message {
+        margin-top: 10px;
+        padding: 10px;
+        border-radius: 5px;
+        display: none;
+    }
+
+    .message.success {
+        background: #c6f6d5;
+        color: #22543d;
+        border: 1px solid #9ae6b4;
+    }
+
+    .message.error {
+        background: #fed7d7;
+        color: #742a2a;
+        border: 1px solid #fc8181;
+    }
+
+    .message.info {
+        background: #bee3f8;
+        color: #2c5282;
+        border: 1px solid #90cdf4;
+    }
+
+    .file-name {
+        margin-top: 10px;
+        padding: 10px;
+        background: #edf2f7;
+        border-radius: 5px;
+        text-align: center;
+        display: none;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>🏗️ Génération 2D/3D depuis DXF</h1>
+        <a href="/2d3d" class="home-link">🏠 Accueil</a>
+    </div>
+
+    <div class="card">
+        <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">📁</div>
+            <p>Glissez-déposez votre fichier DXF ici</p>
+            <p class="file-info">ou cliquez pour sélectionner</p>
+            <input type="file" id="fileInput" accept=".dxf" class="file-input">
+        </div>
+
+        <div id="fileName" class="file-name"></div>
+
+        <button id="generateBtn" class="btn" disabled>🚀 Générer 2D/3D</button>
+
+        <div class="progress" id="progress">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill">0%</div>
+            </div>
+        </div>
+
+        <div class="result" id="result">
+            <h3>✅ Génération terminée !</h3>
+            <div class="result-buttons">
+                <button id="download2dBtn" class="btn result-btn">📥 Télécharger 2D</button>
+                <button id="download3dBtn" class="btn result-btn">📥 Télécharger 3D</button>
+            </div>
+        </div>
+
+        <div class="message" id="message"></div>
+    </div>
+</div>
+
+<script>
+    let uploadedFile = null;
+    let file2dUrl = null;
+    let file3dUrl = null;
+
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const generateBtn = document.getElementById('generateBtn');
+    const progress = document.getElementById('progress');
+    const progressFill = document.getElementById('progressFill');
+    const result = document.getElementById('result');
+    const messageDiv = document.getElementById('message');
+    const download2dBtn = document.getElementById('download2dBtn');
+    const download3dBtn = document.getElementById('download3dBtn');
+    const fileNameDiv = document.getElementById('fileName');
+
+    function showMessage(text, type) {
+        messageDiv.textContent = text;
+        messageDiv.className = `message ${type}`;
+        messageDiv.style.display = 'block';
+        setTimeout(() => {
+            messageDiv.style.display = 'none';
+        }, 5000);
+    }
+
+    function updateProgress(percent, text) {
+        progress.style.display = 'block';
+        progressFill.style.width = `${percent}%`;
+        progressFill.textContent = text || `${percent}%`;
+    }
+
+    uploadArea.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('drag-over');
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+        uploadArea.classList.remove('drag-over');
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('drag-over');
+        const file = e.dataTransfer.files[0];
+        if (file && file.name.endsWith('.dxf')) {
+            handleFile(file);
+        } else {
+            showMessage('Veuillez sélectionner un fichier DXF valide', 'error');
+        }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            handleFile(file);
+        }
+    });
+
+    function handleFile(file) {
+        uploadedFile = file;
+        const formData = new FormData();
+        formData.append('file', file);
+
+        fileNameDiv.textContent = `📄 Fichier: ${file.name}`;
+        fileNameDiv.style.display = 'block';
+        
+        updateProgress(30, 'Upload en cours...');
+
+        fetch('/upload', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'uploaded') {
+                updateProgress(100, 'Upload terminé !');
+                setTimeout(() => {
+                    progress.style.display = 'none';
+                    generateBtn.disabled = false;
+                    showMessage(`Fichier "${file.name}" chargé avec succès`, 'success');
+                }, 500);
+            } else {
+                throw new Error('Upload failed');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            progress.style.display = 'none';
+            showMessage('Erreur lors de l\'upload du fichier', 'error');
+        });
+    }
+
+    generateBtn.addEventListener('click', () => {
+        if (!uploadedFile) {
+            showMessage('Veuillez d\'abord charger un fichier DXF', 'error');
+            return;
+        }
+
+        generateBtn.disabled = true;
+        updateProgress(50, 'Génération en cours...');
+
+        // ROUTE CORRIGÉE: /generate_2d3d au lieu de /generate
+        fetch('/generate_2d3d', {
+            method: 'POST'
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.text().then(text => {
+                    throw new Error(text || 'Erreur serveur');
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            updateProgress(100, 'Génération terminée !');
+            file2dUrl = data.file2d;
+            file3dUrl = data.file3d;
+            
+            setTimeout(() => {
+                progress.style.display = 'none';
+                result.style.display = 'block';
+                generateBtn.disabled = false;
+                showMessage('Fichiers 2D et 3D générés avec succès !', 'success');
+            }, 500);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            progress.style.display = 'none';
+            generateBtn.disabled = false;
+            showMessage('Erreur lors de la génération: ' + error.message, 'error');
+        });
+    });
+
+    download2dBtn.addEventListener('click', () => {
+        if (file2dUrl) {
+            window.location.href = file2dUrl;
+        }
+    });
+
+    download3dBtn.addEventListener('click', () => {
+        if (file3dUrl) {
+            window.location.href = file3dUrl;
+        }
+    });
+</script>
+
+</body>
+</html>

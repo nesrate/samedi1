@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Architecture SaaS - Applications DXF</title>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        :root{
+            --bg:#f5f5f3;
+            --text:#1f1f1f;
+            --muted:#777;
+            --line:#e5e5e5;
+            --accent:#111;
+            --white:#ffffff;
+        }
+
+        body{
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height:100vh;
+        }
+
+        /* =========================
+           NAVBAR
+        ========================== */
+
+        .navbar{
+            width:100%;
+            background:rgba(255,255,255,0.92);
+            backdrop-filter: blur(10px);
+            border-bottom:1px solid var(--line);
+
+            position:fixed;
+            top:0;
+            left:0;
+            z-index:1000;
+        }
+
+        .nav-container{
+            max-width:1300px;
+            margin:auto;
+
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+
+            padding:18px 40px;
+        }
+
+        .logo{
+            display:flex;
+            align-items:center;
+            gap:12px;
+
+            text-decoration:none;
+            color:var(--text);
+        }
+
+        .logo img{
+            width:42px;
+            height:42px;
+            object-fit:cover;
+            border-radius:10px;
+        }
+
+        .logo span{
+            font-size:1.2rem;
+            font-weight:600;
+            letter-spacing:1px;
+        }
+
+        .nav-links{
+            display:flex;
+            align-items:center;
+            gap:35px;
+        }
+
+        .nav-links a{
+            text-decoration:none;
+            color:#444;
+            font-size:0.95rem;
+            transition:0.3s;
+            position:relative;
+        }
+
+        .nav-links a:hover{
+            color:#000;
+        }
+
+        .nav-links a::after{
+            content:"";
+            position:absolute;
+            bottom:-6px;
+            left:0;
+            width:0%;
+            height:1px;
+            background:#000;
+            transition:0.3s;
+        }
+
+        .nav-links a:hover::after{
+            width:100%;
+        }
+
+        /* =========================
+           HERO
+        ========================== */
+
+        .hero{
+            padding-top:120px;
+            padding-bottom:80px;
+
+            max-width:1300px;
+            margin:auto;
+
+            padding-left:40px;
+            padding-right:40px;
+        }
+
+        .hero-top{
+            margin-bottom:60px;
+        }
+
+        .hero-top h1{
+            font-size:4rem;
+            font-weight:300;
+            line-height:1.1;
+            margin-bottom:15px;
+        }
+
+        .hero-top p{
+            max-width:700px;
+            color:var(--muted);
+            font-size:1.1rem;
+            line-height:1.8;
+        }
+
+        /* =========================
+           CARDS
+        ========================== */
+
+        .cards{
+            display:grid;
+            grid-template-columns:repeat(auto-fit, minmax(320px,1fr));
+            gap:30px;
+        }
+
+        .card{
+            background:var(--white);
+            border:1px solid var(--line);
+            border-radius:24px;
+            padding:40px;
+
+            transition:0.35s ease;
+        }
+
+        .card:hover{
+            transform:translateY(-8px);
+            box-shadow:0 15px 40px rgba(0,0,0,0.08);
+        }
+
+        .card-icon{
+            font-size:3rem;
+            margin-bottom:25px;
+        }
+
+        .card h2{
+            font-size:1.5rem;
+            font-weight:600;
+            margin-bottom:18px;
+            line-height:1.4;
+        }
+
+        .card p{
+            color:var(--muted);
+            line-height:1.8;
+            margin-bottom:30px;
+        }
+
+        .btn{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+
+            padding:14px 26px;
+
+            background:#111;
+            color:white;
+
+            text-decoration:none;
+            border-radius:50px;
+
+            transition:0.3s;
+            font-size:0.95rem;
+            letter-spacing:0.5px;
+        }
+
+        .btn:hover{
+            background:#333;
+        }
+
+        /* =========================
+           FOOTER
+        ========================== */
+
+        footer{
+            margin-top:80px;
+            padding:40px;
+
+            border-top:1px solid var(--line);
+
+            text-align:center;
+            color:var(--muted);
+            font-size:0.9rem;
+        }
+
+        /* =========================
+           MOBILE
+        ========================== */
+
+        @media(max-width:768px){
+
+            .nav-container{
+                padding:16px 20px;
+                flex-direction:column;
+                gap:18px;
+            }
+
+            .nav-links{
+                gap:18px;
+                flex-wrap:wrap;
+                justify-content:center;
+            }
+
+            .hero{
+                padding-left:20px;
+                padding-right:20px;
+            }
+
+            .hero-top h1{
+                font-size:2.4rem;
+            }
+
+            .card{
+                padding:30px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- =========================
+         NAVBAR
+    ========================== -->
+
+    <nav class="navbar">
+        <div class="nav-container">
+
+            <!-- LOGO -->
+            <a href="/" class="logo">
+                <!-- Change logo.png with your logo -->
+                <img src="/static/logo.png" alt="Logo">
+                <span>ARCH DXF+</span>
+            </a>
+
+            <!-- MENU -->
+            <div class="nav-links">
+                <a href="#about">About Us</a>
+                <a href="#privacy">Privacy Policy</a>
+                <a href="#contact">Contact</a>
+            </div>
+
+        </div>
+    </nav>
+
+    <!-- =========================
+         HERO SECTION
+    ========================== -->
+
+    <section class="hero">
+
+        <div class="hero-top">
+            <h1>
+                Minimal Architecture <br>
+                DXF Platform
+            </h1>
+
+            <p>
+                Une plateforme SaaS moderne dédiée aux architectes, ingénieurs et bureaux d’études.
+                Automatisez le traitement DXF, l’extraction de coordonnées et la génération 2D/3D
+                dans une interface élégante et minimaliste.
+            </p>
+        </div>
+
+        <!-- APPLICATIONS -->
+        <div class="cards">
+
+            <!-- CARD 1 -->
+            <div class="card">
+
+                <div class="card-icon">📄</div>
+
+                <h2>
+                    Extraction de coordonnées
+                </h2>
+
+                <p>
+                    Extrayez automatiquement les points, textes et coordonnées depuis des PDF
+                    ou images avec OCR avancé puis générez des fichiers DXF exploitables.
+                </p>
+
+                <!-- CHEMIN CONSERVÉ -->
+                <a href="/coor" class="btn">
+                    Ouvrir l'application
+                </a>
+
+            </div>
+
+            <!-- CARD 2 -->
+            <div class="card">
+
+                <div class="card-icon">🏗️</div>
+
+                <h2>
+                    Génération 2D / 3D
+                </h2>
+
+                <p>
+                    Analyse intelligente des zones DXF, création automatique de modèles
+                    2D et extrusion 3D pour les workflows architecturaux modernes.
+                </p>
+
+                <!-- CHEMIN CONSERVÉ -->
+                <a href="/2d3d" class="btn">
+                    Ouvrir l'application
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
+
+    <footer>
+
+        <div id="about">
+            <strong>About Us</strong><br><br>
+            Plateforme SaaS spécialisée dans l’automatisation des traitements DXF
+            pour les architectes et professionnels du bâtiment.
+        </div>
+
+        <br><br>
+
+        <div id="privacy">
+            <strong>Privacy Policy</strong><br><br>
+            Vos fichiers restent sécurisés et ne sont jamais partagés avec des tiers.
+        </div>
+
+        <br><br>
+
+        <div id="contact">
+            <strong>Contact</strong><br><br>
+            contact@archdxf.com
+        </div>
+
+        <br><br>
+
+        © 2026 - ARCH DXF Platform
+
+    </footer>
+
+</body>
+</html>

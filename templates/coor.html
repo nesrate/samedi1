@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OCR + DXF Generator</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            gap: 20px;
+        }
+
+        .div1 {
+            width: 70%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .div2 { 
+            width: 30%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        textarea { width: 100%; box-sizing: border-box; margin-bottom: 10px; }
+        button { padding: 10px 10px; margin: 5px 0; cursor: pointer; }
+        .point { 
+            margin-bottom: 8px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .point.selected {
+            background-color: #e8f4fd;
+            border-color: #3498db;
+        }
+        .point input[type="checkbox"] {
+            margin: 0;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+        .point input[type="text"],
+        .point input[type="number"] {
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        .point .title-input {
+            width: 100px;
+        }
+        .point .coord-input {
+            width: 120px;
+        }
+
+        #loadingBox{
+           width:100%;
+           height:6px;
+           background:#ddd;
+           margin-top:10px;
+           position:relative;
+           display:none;
+           overflow:hidden;
+        }
+
+        #loadingBar{
+            position:absolute;
+            width:50%;
+            height:100%;
+            background:#3498db;
+            animation:load 1.5s infinite;
+        }
+
+        #loadingPercent{
+            position:absolute;
+            right:5px;
+            top:0;
+            font-size:12px;
+            line-height:20px;
+        }
+
+        @keyframes load{
+            0%{left:-50%;}
+            100%{left:100%;}
+        }
+        
+        .points-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+        
+        .points-count {
+            background-color: #3498db;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+        
+        .select-all-btn {
+            background-color: #95a5a6;
+            padding: 5px 10px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+        
+        .select-all-btn:hover {
+            background-color: #7f8c8d;
+        }
+        
+        /* منع تحديد النص عند النقر على الخلفية */
+        .page-background {
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body class="page-background">
+
+<div class="container">
+
+    <!-- Div1: قسم إدخال يدوي يظهر دائماً -->
+    <div class="div1">
+        <h3>1️⃣ إدخال يدوي</h3>
+        <form method="post" action="/generate_dxf2" id="dxfForm">
+            <div class="points-header">
+                <div>
+                    <span class="points-count" id="pointsCount">0 نقطة</span>
+                    <button type="button" class="select-all-btn" onclick="toggleSelectAll()">☑ تحديد الكل</button>
+                </div>
+            </div>
+            <div id="points"></div>
+            <button type="button" onclick="addPoint()">➕ إضافة نقطة</button>
+            <br><br>
+            <button type="submit">📥 توليد ملف AutoCAD (DXF)</button>
+        </form>
+    </div>
+
+    <!-- Div2: Upload + OCR Text -->
+    <div class="div2">
+        <h2>Upload Image or PDF</h2>
+
+        <form method="POST" action="/coor" enctype="multipart/form-data" id="uploadForm">
+            <input type="file" name="file" onchange="startLoading(); this.form.submit()">
+                
+            <!-- Loading -->
+            <div id="loadingBox">
+                <div id="loadingBar"></div>
+                <span id="loadingPercent">Loading bar...</span>
+            </div>
+        </form>
+
+        <!-- OCR Text يظهر فقط بعد أن يوجد text -->
+        {% if text %}
+        <h2>OCR Text</h2>
+        <textarea id="input" name="input" rows="15">{{ text }}</textarea>
+        <br>
+        <button type="button" onclick="filterAndParse()">🔄 Convert to Inputs</button>
+        {% endif %}
+    </div>
+
+</div>
+
+<script>
+// متغيرات لتتبع النقاط المحددة
+let selectedPoints = new Set();
+let lastSelectedIndex = null;
+
+// ===== إلغاء تحديد جميع النقاط =====
+function deselectAllPoints() {
+    const allPoints = document.querySelectorAll('.point');
+    allPoints.forEach(point => {
+        const checkbox = point.querySelector('.point-checkbox');
+        checkbox.checked = false;
+        selectedPoints.delete(point);
+        point.classList.remove('selected');
+    });
+    lastSelectedIndex = null;
+    updateSelectedCount();
+}
+
+// ===== إضافة نقطة DXF =====
+function addPoint(title = "", x = "", y = "") {
+    const pointsDiv = document.getElementById("points");
+    const div = document.createElement("div");
+    div.className = "point";
+    div.innerHTML = `
+        <input type="checkbox" class="point-checkbox" onclick="handleCheckboxClick(this, event)">
+        Title: <input type="text" name="title[]" value="${title}" placeholder="B.1, WT2..." class="title-input" required>
+        X: <input type="number" step="any" name="x[]" value="${x}" class="coord-input" required>
+        Y: <input type="number" step="any" name="y[]" value="${y}" class="coord-input" required>
+    `;
+    
+    pointsDiv.appendChild(div);
+    updatePointsCount();
+}
+
+// ===== التعامل مع نقرة checkbox =====
+function handleCheckboxClick(checkbox, event) {
+    // منع انتشار الحدث لتجنب إلغاء التحديد عند النقر على checkbox
+    event.stopPropagation();
+    
+    const pointDiv = checkbox.closest('.point');
+    const index = Array.from(document.getElementById("points").children).indexOf(pointDiv);
+    
+    if(event.shiftKey && lastSelectedIndex !== null) {
+        // تحديد نطاق من النقاط (Shift + click)
+        const start = Math.min(lastSelectedIndex, index);
+        const end = Math.max(lastSelectedIndex, index);
+        const allPoints = document.querySelectorAll('.point');
+        
+        for(let i = start; i <= end; i++) {
+            const cb = allPoints[i].querySelector('.point-checkbox');
+            cb.checked = checkbox.checked;
+            if(checkbox.checked) {
+                selectedPoints.add(allPoints[i]);
+                allPoints[i].classList.add('selected');
+            } else {
+                selectedPoints.delete(allPoints[i]);
+                allPoints[i].classList.remove('selected');
+            }
+        }
+    } else {
+        // تحديد نقطة واحدة
+        if(checkbox.checked) {
+            // إلغاء تحديد جميع النقاط الأخرى
+            deselectAllPoints();
+            // تحديد النقطة الحالية
+            checkbox.checked = true;
+            selectedPoints.add(pointDiv);
+            pointDiv.classList.add('selected');
+            lastSelectedIndex = index;
+        } else {
+            selectedPoints.delete(pointDiv);
+            pointDiv.classList.remove('selected');
+            if(lastSelectedIndex === index) {
+                lastSelectedIndex = null;
+            }
+        }
+    }
+    
+    updateSelectedCount();
+}
+
+// ===== تحديد أو إلغاء تحديد كل النقاط =====
+function toggleSelectAll() {
+    const allPoints = document.querySelectorAll('.point');
+    const someUnselected = Array.from(allPoints).some(point => !selectedPoints.has(point));
+    
+    // إلغاء تحديد الكل أولاً
+    deselectAllPoints();
+    
+    if(someUnselected) {
+        // تحديد الكل
+        allPoints.forEach(point => {
+            const checkbox = point.querySelector('.point-checkbox');
+            checkbox.checked = true;
+            selectedPoints.add(point);
+            point.classList.add('selected');
+        });
+        lastSelectedIndex = null;
+    }
+    
+    updateSelectedCount();
+}
+
+// ===== تحديث عدد النقاط المحددة =====
+function updateSelectedCount() {
+    const count = selectedPoints.size;
+    const pointsCountSpan = document.getElementById("pointsCount");
+    const totalPoints = document.querySelectorAll('.point').length;
+    if(count > 0) {
+        pointsCountSpan.innerHTML = `${totalPoints} نقطة | ${count} محددة`;
+        pointsCountSpan.style.backgroundColor = "#27ae60";
+    } else {
+        pointsCountSpan.innerHTML = `${totalPoints} نقطة`;
+        pointsCountSpan.style.backgroundColor = "#3498db";
+    }
+}
+
+// ===== تحديث عدد النقاط الكلي =====
+function updatePointsCount() {
+    const totalPoints = document.querySelectorAll('.point').length;
+    const selectedCount = selectedPoints.size;
+    const pointsCountSpan = document.getElementById("pointsCount");
+    
+    if(selectedCount > 0) {
+        pointsCountSpan.innerHTML = `${totalPoints} نقطة | ${selectedCount} محددة`;
+        pointsCountSpan.style.backgroundColor = "#27ae60";
+    } else {
+        pointsCountSpan.innerHTML = `${totalPoints} نقطة`;
+        pointsCountSpan.style.backgroundColor = "#3498db";
+    }
+}
+
+// ===== حذف النقاط المحددة =====
+function deleteSelectedPoints() {
+    if(selectedPoints.size === 0) {
+        alert("⚠️ الرجاء تحديد النقاط التي تريد حذفها أولاً!");
+        return;
+    }
+    
+    // تجميع أسماء النقاط للتأكيد
+    const titles = [];
+    selectedPoints.forEach(point => {
+        const titleInput = point.querySelector('.title-input');
+        titles.push(titleInput.value);
+    });
+    
+    const message = `⚠️ هل أنت متأكد من حذف ${selectedPoints.size} نقطة؟\n\nالنقاط:\n${titles.join('\n')}`;
+    
+    if(confirm(message)) {
+        selectedPoints.forEach(point => {
+            point.remove();
+        });
+        selectedPoints.clear();
+        updatePointsCount();
+        updateSelectedCount();
+        lastSelectedIndex = null;
+    }
+}
+
+// ===== تحريك النقاط المحددة =====
+function moveSelectedPoints(direction) {
+    if(selectedPoints.size === 0) {
+        alert("⚠️ الرجاء تحديد النقاط التي تريد تحريكها أولاً!");
+        return;
+    }
+    
+    const pointsDiv = document.getElementById("points");
+    const allPoints = Array.from(pointsDiv.children);
+    
+    // تحويل Set إلى Array وفرز حسب الموضع
+    const selectedArray = Array.from(selectedPoints);
+    selectedArray.sort((a, b) => allPoints.indexOf(a) - allPoints.indexOf(b));
+    
+    if(direction === 'up') {
+        // التحريك لأعلى: أول نقطة محددة لا يمكن تحريكها لأعلى إذا كانت في البداية
+        const firstSelectedIndex = allPoints.indexOf(selectedArray[0]);
+        if(firstSelectedIndex === 0) {
+            alert("⚠️ لا يمكن تحريك النقاط لأعلى أكثر من هذا!");
+            return;
+        }
+        
+        // تحريك كل نقطة محددة لأعلى
+        for(let i = 0; i < selectedArray.length; i++) {
+            const currentIndex = allPoints.indexOf(selectedArray[i]);
+            if(currentIndex > 0) {
+                const previousPoint = allPoints[currentIndex - 1];
+                // إذا كانت النقطة السابقة محددة أيضاً، تخطي
+                if(!selectedPoints.has(previousPoint)) {
+                    pointsDiv.insertBefore(selectedArray[i], previousPoint);
+                }
+            }
+        }
+    } 
+    else if(direction === 'down') {
+        // التحريك لأسفل: آخر نقطة محددة لا يمكن تحريكها لأسفل إذا كانت في النهاية
+        const lastSelectedIndex = allPoints.indexOf(selectedArray[selectedArray.length - 1]);
+        if(lastSelectedIndex === allPoints.length - 1) {
+            alert("⚠️ لا يمكن تحريك النقاط لأسفل أكثر من هذا!");
+            return;
+        }
+        
+        // تحريك كل نقطة محددة لأسفل (من الأسفل للأعلى)
+        for(let i = selectedArray.length - 1; i >= 0; i--) {
+            const currentIndex = allPoints.indexOf(selectedArray[i]);
+            if(currentIndex < allPoints.length - 1) {
+                const nextPoint = allPoints[currentIndex + 1];
+                if(!selectedPoints.has(nextPoint)) {
+                    pointsDiv.insertBefore(nextPoint, selectedArray[i]);
+                }
+            }
+        }
+    }
+    
+    // إعادة ترتيب allPoints بعد التغيير
+    const newAllPoints = Array.from(pointsDiv.children);
+    
+    // تحديث المراجع في selectedPoints
+    const newSelected = new Set();
+    selectedArray.forEach(oldPoint => {
+        const newIndex = newAllPoints.indexOf(oldPoint);
+        if(newIndex !== -1) {
+            newSelected.add(oldPoint);
+        }
+    });
+    selectedPoints.clear();
+    newSelected.forEach(point => selectedPoints.add(point));
+    
+    updatePointsCount();
+    updateSelectedCount();
+}
+
+// ===== تحريك النقاط بالكيبورد =====
+function handleKeyboardMove(event) {
+    if(event.key === 'ArrowUp') {
+        event.preventDefault();
+        moveSelectedPoints('up');
+    } else if(event.key === 'ArrowDown') {
+        event.preventDefault();
+        moveSelectedPoints('down');
+    } else if(event.key === 'Delete' || event.key === 'Del') {
+        event.preventDefault();
+        deleteSelectedPoints();
+    } else if(event.key === 'a' && (event.ctrlKey || event.metaKey)) {
+        event.preventDefault();
+        toggleSelectAll();
+    } else if(event.key === 'Escape' || event.key === 'Esc') {
+        event.preventDefault();
+        deselectAllPoints();
+    }
+}
+
+// ===== النقر على الصفحة لإلغاء التحديد =====
+function handlePageClick(event) {
+    // التحقق إذا كان النقر على checkbox أو على أي عنصر داخل النقطة
+    const isPointElement = event.target.closest('.point');
+    const isButton = event.target.closest('button');
+    const isTextarea = event.target.closest('textarea');
+    const isInput = event.target.closest('input');
+    
+    // إذا كان النقر على checkbox أو زر أو textarea أو input، لا نلغِ التحديد
+    if(isPointElement && event.target.type === 'checkbox') {
+        return;
+    }
+    if(isButton || isTextarea || isInput) {
+        return;
+    }
+    
+    // إلغاء تحديد جميع النقاط
+    deselectAllPoints();
+}
+
+// ===== تصحيح OCR العناوين =====
+function fixOcrTitles(text){
+    const lines = text.split(/\r?\n/);
+    const fixed = lines.map(line => {
+        line = line.trim();
+        if(/^8\./.test(line)) return line.replace(/^8/,"B");
+        if(/^8\d/.test(line)) return line.replace(/^8/,"B");
+        if(/^8[A-Z]/.test(line)) return line.replace(/^8/,"B");
+        return line;
+    });
+    return fixed.join("\n");
+}
+
+// ===== تحويل النص إلى نقاط =====
+function parseTextareaFromText(text) {
+    if(!text) return;
+    
+    const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l);
+    document.getElementById("points").innerHTML = "";
+    selectedPoints.clear();
+    
+    let i = 0;
+    
+    while (i < lines.length) {
+        if (isNaN(lines[i]) && i + 2 < lines.length) {
+            const xParts = lines[i + 1].split(/\s+/);
+            const yParts = lines[i + 2].split(/\s+/);
+            
+            if (xParts.length === 2 && yParts.length === 2) {
+                const x = xParts[0] + xParts[1];
+                const y = yParts[0] + yParts[1];
+                const title = lines[i] || "";
+                
+                addPoint(title, x, y);
+                i += 3;
+                continue;
+            }
+        }
+        i++;
+    }
+    
+    updatePointsCount();
+}
+
+// ===== الفلترة والتحويل (الحفاظ على محتوى textarea الأصلي) =====
+async function filterAndParse() {
+    const input = document.getElementById("input");
+    
+    if(!input) return;
+    
+    // حفظ المحتوى الأصلي
+    const originalText = input.value;
+    
+    // تصحيح OCR
+    let correctedText = fixOcrTitles(originalText);
+    
+    // إرسال للفلترة
+    const res = await fetch("/filter2", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            text: correctedText
+        })
+    });
+    
+    const data = await res.json();
+    
+    // تحويل النص المفلتر إلى نقاط فقط
+    parseTextareaFromText(data.result);
+    
+    // رسالة تأكيد
+    console.log("تم تحديث النقاط مع الحفاظ على النص الأصلي في textarea");
+}
+
+// ===== إضافة نقطة فارغة جديدة =====
+function addEmptyPoint() {
+    addPoint("", "", "");
+}
+
+// ===== تنفيذ تلقائي عند تحميل الصفحة =====
+window.onload = () => {
+    addEmptyPoint();
+    const input = document.getElementById("input");
+    if(input){
+        filterAndParse();
+    }
+    
+    // إضافة مستمع للأحداث للكيبورد
+    document.addEventListener('keydown', handleKeyboardMove);
+    
+    // إضافة مستمع للنقر على الصفحة
+    document.addEventListener('click', handlePageClick);
+};
+
+function startLoading(){
+    let box = document.getElementById("loadingBox");
+    box.style.display = "block";
+}
+</script>
+
+</body>
+</html>
