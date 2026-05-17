@@ -227,7 +227,7 @@ def generate_dxf2():
     if len(points) > 1:
         msp.add_lwpolyline(points, close=True)
     
-    file_name = "points.dxf"
+    file_name = "points++.dxf"
     doc.saveas(file_name)
     
     return send_file(file_name, as_attachment=True, download_name="النقاط.dxf")
