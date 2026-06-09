@@ -20,14 +20,56 @@
             --line:#e5e5e5;
             --accent:#111;
             --white:#ffffff;
+
+            --bleuc:#6f819f;
+            --bleuf:#0f141c;
+            --orange:#ffa602;
+            --orangef:#926004;
         }
 
+
+
+
+
         body{
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--bg);
-            color: var(--text);
+            font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;
+            /* background:var(--bg); */
+            color:var(--text);
             min-height:100vh;
-        }
+
+            background-color: #0f141c;
+            /* Effet de fond technique texturé */
+            background-image:
+                radial-gradient(circle at 50% 30%, rgba(30, 41, 59, 0.6) 0%, rgba(15, 20, 28, 1) 70%),
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+
+            background-attachment: fixed;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;   
+            }
+/* IMAGE OVERLAY */
+/* body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: url("/static/big.png") center center / cover no-repeat;
+    opacity: 0.02;
+    pointer-events: none;
+    z-index: 0;
+   
+   
+    width: 50%;
+    margin: auto;
+} */
+/* pour que ton contenu soit au-dessus */
+/* body > * {
+    position: relative;
+    z-index: 1;
+} */
+
+
 
         /* =========================
            NAVBAR
@@ -35,18 +77,19 @@
 
         .navbar{
             width:100%;
-            background:rgba(255,255,255,0.92);
-            backdrop-filter: blur(10px);
-            border-bottom:1px solid var(--line);
+            background:var(--bleuf);
 
-            position:fixed;
+            backdrop-filter:blur(1px);
+            /* border-bottom:1px solid var(--line); */
+
+            position:fixed;       /*=====================================  NOT FIXED ===========================*/
             top:0;
             left:0;
             z-index:1000;
         }
 
         .nav-container{
-            max-width:1300px;
+            max-width:65%;
             margin:auto;
 
             display:flex;
@@ -59,23 +102,24 @@
         .logo{
             display:flex;
             align-items:center;
-            gap:12px;
+            gap:24px;
 
             text-decoration:none;
             color:var(--text);
         }
 
         .logo img{
-            width:42px;
-            height:42px;
+            width:62px;
+            height:62px;
             object-fit:cover;
-            border-radius:10px;
+            border-radius:3px;
         }
 
         .logo span{
-            font-size:1.2rem;
-            font-weight:600;
+            font-size:20px;
+            font-weight:710;
             letter-spacing:1px;
+            color: var(--white);
         }
 
         .nav-links{
@@ -86,14 +130,15 @@
 
         .nav-links a{
             text-decoration:none;
-            color:#444;
+            color: #6f819f;
             font-size:0.95rem;
             transition:0.3s;
             position:relative;
+            font-weight: 500;
         }
 
         .nav-links a:hover{
-            color:#000;
+            color:var(--white);
         }
 
         .nav-links a::after{
@@ -111,117 +156,144 @@
             width:100%;
         }
 
-        /* =========================
-           HERO
-        ========================== */
 
-        .hero{
-            padding-top:120px;
-            padding-bottom:80px;
 
-            max-width:1300px;
-            margin:auto;
 
-            padding-left:40px;
-            padding-right:40px;
-        }
 
-        .hero-top{
-            margin-bottom:60px;
-        }
 
-        .hero-top h1{
-            font-size:4rem;
-            font-weight:300;
-            line-height:1.1;
-            margin-bottom:15px;
-        }
 
-        .hero-top p{
-            max-width:700px;
-            color:var(--muted);
-            font-size:1.1rem;
-            line-height:1.8;
-        }
+/* CARD GLASS */
+.glass-card {
+    max-width: 900px;
+    margin: 60px auto;
+    padding: 40px;
+    border-radius: 24px;
 
-        /* =========================
-           CARDS
-        ========================== */
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
 
-        .cards{
-            display:grid;
-            grid-template-columns:repeat(auto-fit, minmax(320px,1fr));
-            gap:30px;
-        }
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.1),
+        0 20px 40px rgba(0, 0, 0, 0.4);
+    color: #fff;
+}
+/* TITLE */
+.about-header h2 {
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 20px;
+    color: white;}
+/* TEXT +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
-        .card{
-            background:var(--white);
-            border:1px solid var(--line);
-            border-radius:24px;
-            padding:40px;
+#about{ background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.1),
+        0 20px 40px rgba(0, 0, 0, 0.4);
 
-            transition:0.35s ease;
-        }
+        line-height:1.7;
+        border-radius:25px;
+        text-align: center;
+        width: 62%;
+       
+        
+        margin:auto;
+        margin-top: 70px;
+        
+        padding-bottom:90px;  /*                      80px               */
+        padding-top: 70px;
+        padding-left:50px;
+        padding-right:50px;        }
+#about:hover {
+    border-color: rgb(51, 65, 85);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);}
+.about-card H2 {
+    font-size: 28px;
+    color:var(--white);
+    line-height: 1.6;
+    margin-bottom: 25px;
+    color: var(--orange);}
+.about-card p {
+    font-size: 14px;
+    color: #94a3b8;
+    line-height: 1.9;
+    margin-bottom:15px;}
 
-        .card:hover{
-            transform:translateY(-8px);
-            box-shadow:0 15px 40px rgba(0,0,0,0.08);
-        }
 
-        .card-icon{
-            font-size:3rem;
-            margin-bottom:25px;
-        }
+    /* FEATURES GRID */
+.features {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap:45px;
+    margin-top: 45px;
+}
+/* FEATURE BOX */
+    .feature-box {
+        display: flex;
+        /* align-items: center; */
+        align-items: flex-start;
+        /* justify-content: center; */
+        gap: 14px;
+        padding: 16px;
+        border-radius: 14px;
+        
+        
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        
+        transition: 0.3s ease;
+    }
+    .feature-box:hover {
+        transform: translateY(-3px);
+        background: rgba(255, 255, 255, 0.05);
+    }
+    .feature-box p {
+        font-size: 12px;
+        color: #94a3b8;
+        margin: 0;
+        padding-left: 25px;
+    }
 
-        .card h2{
-            font-size:1.5rem;
-            font-weight:600;
-            margin-bottom:18px;
-            line-height:1.4;
-        }
 
-        .card p{
-            color:var(--muted);
-            line-height:1.8;
-            margin-bottom:30px;
-        }
 
-        .btn{
-            display:inline-flex;
-            align-items:center;
-            justify-content:center;
 
-            padding:14px 26px;
+/* ICON */
+.icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
 
-            background:#111;
-            color:white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-            text-decoration:none;
-            border-radius:50px;
+    background: linear-gradient(135deg, #a67c37, #6e4e1f);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.4),
+                0 4px 10px rgba(0,0,0,0.3);
 
-            transition:0.3s;
-            font-size:0.95rem;
-            letter-spacing:0.5px;
-        }
+    flex-shrink: 0;
+    font-size: 18px;
+}
 
-        .btn:hover{
-            background:#333;
-        }
 
-        /* =========================
-           FOOTER
-        ========================== */
 
-        footer{
-            margin-top:80px;
-            padding:40px;
+                        /* =========================
+                        FOOTER
+                        ========================== */
 
-            border-top:1px solid var(--line);
+                        footer{
+                            margin-top:5px;
+                            padding:40px;
 
-            text-align:center;
-            color:var(--muted);
-            font-size:0.9rem;
-        }
+                            /* border-top:1px solid var(--line); */
+
+                            text-align:center;
+                            color:var(--bleuc);
+                            font-size:0.9rem;
+                        }
 
         /* =========================
            MOBILE
@@ -241,21 +313,498 @@
                 justify-content:center;
             }
 
-            .hero{
-                padding-left:20px;
-                padding-right:20px;
-            }
 
             .hero-top h1{
                 font-size:2.4rem;
             }
 
-            .card{
-                padding:30px;
+
+
+
+
             }
+
+
+
+
+        .container{    /* =========FORM============= */
+
+
+width:65%;/* =========FORM============= */
+padding: 50px;
+margin: auto;
+padding-left:45px;
+padding-right:45px;
+border-radius: 25px;
+box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+background: rgba(255, 255, 255, 0.02);
+border: 1px solid rgba(255, 255, 255, 0.08);
+box-shadow:
+inset 0 1px 1px rgba(255, 255, 255, 0.1),
+0 20px 40px rgba(0, 0, 0, 0.4);
+line-height:1.7;
+
+transition: all 0.2s ease;
+            /* CENTRAGE */
+
         }
 
-    </style>
+.container:hover {
+    border-color: rgb(51, 65, 85);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+}
+
+
+/* focus */
+
+/* quand un input ou textarea dedans est focus */
+/* .container:focus-within {
+    border-color: #f59e0b; 
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+} */
+input:focus,
+input,
+textarea {
+    width: 100%;
+    padding: 12px 14px;
+
+    border: 1px solid rgba(51, 65, 85, 0.6);
+    border-radius: 8px;
+
+    background: var(--bleuf);
+    /* color: var(--text);  */
+
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+/* placeholder */
+input::placeholder,
+textarea::placeholder {
+    color: var(--bleuc);
+    font-weight: 900;
+}
+
+/* focus effect */
+input:focus,
+textarea:focus {
+    border-color: var(--orange);   /*#f59e0b*/
+    box-shadow: 0 0 0 2px var(--orangef);
+}
+
+        h4{
+          margin-bottom: 15px;
+          font-size: 28px;
+          color: var(--orange);
+          text-align: center;
+        }
+
+        input,
+        textarea{
+          width: 100%;
+          padding: 12px;
+          margin-bottom: 15px;
+          border: none;
+          border-radius: 5px;
+          outline: none;
+        }
+
+        textarea{
+          resize: none;
+        }
+
+
+
+                /* =========================
+           CARDS
+        ========================== */
+
+
+
+        </style>
+
+
+<style>
+    /* ===================== CARD ===================== */
+
+        #submit{
+          border: none;
+          background-color:var(--bleuf);
+          color: var(--orange);
+          width: 100%;
+          cursor: pointer;
+          transition: 0.3s;
+          font-size: 18px;
+          font-weight: bold;        }
+        #submit:hover{
+          /* background-color: var(--orange); */
+        border-color: var(--orange);   /*#f59e0b*/
+        color: var(--white);
+        box-shadow: 0 0 0 2px var(--orange);        }
+        #submit {   transition: transform 0.2s ease;      }
+        #submit:active {   transform: scale(0.95);        }
+    /************************************/
+
+
+
+
+        .hero-top{
+            text-align: center;
+            margin-bottom:30px;
+        }
+
+        .hero-top h1{
+            font-size:3rem;
+            font-weight:550;
+            line-height:1.1;
+            margin-bottom:15px;
+            color: var(--orange);
+        }
+
+        .hero-top p{
+            max-width:1400px;
+            color: var(--bleuc);
+            font-size:1.1rem;
+            line-height:1.8;
+        }
+
+/* ===== MOBILE (moins de 700px) ===== */
+
+    /************************/    
+
+.badge-icon {
+  
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+
+    background: linear-gradient(135deg, #d97706, #78350f);
+}
+
+
+.badge-icon2 {
+  
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+
+    background: linear-gradient(135deg, #059669, #065f46);
+}
+
+/****************************************/
+
+
+
+
+/******************************/
+
+        .hero{
+            padding-top: 70px;
+            padding-bottom:8px;  /*                      80px               */
+
+            max-width:65%;
+            margin:auto;
+            margin-top: 70px;
+
+            padding-left:20px;
+            padding-right:20px;
+
+        }
+
+/* ===================== CARDS CONTAINER ===================== */
+
+
+/* ===================================================== CARD ====================================================== */
+.cards {
+    display: flex;
+    flex-wrap: wrap;   /* مهم جداً */
+    gap: 30px;
+    justify-content: center;
+    margin: auto;
+    width: 65%;}
+.card {
+
+    /* width: 65%; */
+    max-width: 47%;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 45%;   /* 45% = جوج فالسطر */
+
+    padding: 20px;    
+    padding-bottom: 50px;
+    padding-top: 45px;
+    transition: all 0.3s ease;
+
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;}
+.card:hover {
+    border-color: rgb(51, 65, 85);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);}
+/* ======================================= */
+.card-icon {
+
+    display: flex;
+    justify-content: center;  /* أفقي */
+    align-items: center;      /* عمودي */
+    
+    width: 100%;
+        
+    /* height: 60px; */
+
+    background: rgba(2, 6, 23, 0.5); /* slate-950/50 */
+    border: 1px solid rgba(30, 41, 59, 0.8); /* slate-800/80 */
+
+    border-radius: 16px;
+
+    margin-bottom: 70px;
+
+    position: relative;
+    overflow: hidden;}
+.card h2 {
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    line-height:1.9;
+    text-align: center;    }
+.card p {
+    color:var(--bleuc);         /* slate-400                  #94a3b8        */
+    font-size: 14px;
+    line-height: 1.9;
+    margin-bottom: 30px;
+    text-align: center;    }
+.btn {
+
+     align-self: center;
+     
+     
+    width: 200px;
+    max-width: 100%;
+    display: inline-block;
+    
+    
+    
+    
+    
+}
+.btn {
+    
+    padding: 13px 17px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, #ffa602 0%, #926004 100%);    /*            --orange:#ffa602;            --orangef:#926004;         */
+    border: 1px solid rgba(237, 212, 170, 0.3);
+    color: #ffffff;
+    box-shadow: 0 4px 15px rgba(110, 78, 31, 0.35);
+}
+.btn:hover {
+    transform: translateY(-2px);
+
+    border-color: rgba(237, 212, 170, 0.6);
+
+    box-shadow: 0 10px 25px rgba(166, 124, 55, 0.55);}
+
+    /* ================   a apppliquer ====================== */
+.btn-emerald {
+    background: linear-gradient(135deg, #164e37 0%, #0d2e20 100%);
+    border: 1px solid rgba(52, 211, 153, 0.25);
+    color: #ffffff;
+
+    padding: 12px 18px;
+    border-radius: 12px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    text-decoration: none;
+    display: inline-block;
+
+    transition: all 0.3s ease;
+
+    box-shadow: 0 4px 15px rgba(13, 46, 32, 0.35);}
+.btn-emerald:hover {
+    transform: translateY(-2px);
+
+    border-color: rgba(52, 211, 153, 0.5);
+
+    box-shadow: 0 10px 25px rgba(22, 78, 55, 0.55);}
+/* ===================== ICON IMAGE ===================== */
+.icon-img {
+    width: 600px;
+    /* object-fit:contain; */
+    /* height: 60px; */    }
+
+
+
+</style>
+
+
+<!-- ==============les 2 saas ================= -->
+
+
+<!--style>
+            @media (max-width: 700px) {
+    body {
+        width: 205px;
+    }
+
+}
+
+@media (max-width: 700px) {
+    .container {
+        
+        
+        width: 140%;
+        margin: 0 auto; /* centre horizontalement */
+    }
+}
+@media (max-width: 700px) {
+    .hero-top{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .hero-top h1{
+        font-size: 2rem;
+    }
+
+    .hero-top p{
+        font-size: 1rem;
+        padding: 0 10px;
+    }
+}
+
+            @media (max-width: 700px) {
+    .hero {
+        max-width: 90%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }  }
+
+    @media (max-width: 700px) {
+    .cards {
+        grid-template-columns: 1fr;
+        justify-items: center; /* centre les cards */
+    }
+
+    .card {
+        width: 65%; /* important */
+        margin-bottom: 35px;
+    }
+}
+
+</style-->
+
+
+<!-- ==============les 2 saas ================= -->
+
+<style>
+
+    @media (max-width: 700px) {
+        body {
+            background-size: 100% 100%, 20px 20px, 20px 20px;
+               display:flex;
+    flex-direction:column;
+    align-items:center;
+    width: 100%;
+        }
+    } 
+
+    @media(max-width: 700px){
+        #about{     width: 80%;        margin-left: 7%;
+        margin-left: auto;
+        }
+            .about-card{    width: 100%;  margin: auto;     }
+                .features{     width: 100%;   grid-template-columns: repeat(1, 1fr); }
+         }
+     @media(max-width: 700px){
+        .container{     width: 100%;           }
+        }
+
+        /* @media(max-width: 700px){
+             .card {
+    display: flex;
+    flex-direction: column;
+    max-width: 120%;
+    margin: auto;
+    } */
+@media(max-width: 1000px){
+    .cards {
+        width: 100%;
+        
+    }
+
+    .card{
+        flex: 0 1 80%;
+        max-width: 80%;
+        margin: auto;
+    }
+
+  .icon-img {
+            width: 100%;
+        }
+}
+
+@media (max-width: 1000px){
+
+    .hero{
+            display: flex;
+    justify-content: center;
+    align-items: center;
+
+        margin-top: 120px;
+        min-height: 60vh;
+        padding: 40px 2px;
+    }
+
+    .hero-top{
+        text-align: center;
+        width: 100%;
+             
+    }
+
+    .hero-top h1{
+        font-size: 2.2rem;
+        line-height: 1.3;
+    }
+
+    .hero-top p{
+        font-size: 1rem;
+        /* opacity: 0.8; */
+    }
+}
+
+</style>
 </head>
 
 <body>
@@ -268,16 +817,17 @@
         <div class="nav-container">
 
             <!-- LOGO -->
-            <a href="/" class="logo">
-                <!-- Change logo.png with your logo -->
-                <img src="/static/logo.png" alt="Logo">
-                <span>ARCH DXF+-+</span>
+            <!-- <a href="/" class="logo"> -->
+                            <a href="#heros" class="logo">
+
+                <img src="/static/logo-200.png" alt="Logo">
+                <span>ARCHILABTOOLS</span>
             </a>
 
             <!-- MENU -->
             <div class="nav-links">
                 <a href="#about">About Us</a>
-                <a href="#privacy">Privacy Policy</a>
+                <!--a href="#privacy">Privacy Policy</a-->
                 <a href="#contact">Contact</a>
             </div>
 
@@ -288,69 +838,174 @@
          HERO SECTION
     ========================== -->
 
-    <section class="hero">
+                    <section class="hero" id="heros">
+                <div class="hero-top">
+                    <h1>
+                        Plateforme Architecture <br>
+                        2D & 3D
+                    </h1>
 
-        <div class="hero-top">
-            <h1>
-                Minimal Architecture <br>
-                DXF Platform
-            </h1>
+                    <p>
+                        Transformez une simple liste de bornes ou un plan 2D en plans cadastraux précis
+                        et en plans masse 3D automatiques grâce à l’intelligence artificielle
+                        et l’automatisation géomatique.
+                    </p>
+                </div>
+                    </section>
 
-            <p>
-                Une plateforme SaaS moderne dédiée aux architectes, ingénieurs et bureaux d’études.
-                Automatisez le traitement DXF, l’extraction de coordonnées et la génération 2D/3D
-                dans une interface élégante et minimaliste.
-            </p>
-        </div>
 
-        <!-- APPLICATIONS -->
-        <div class="cards">
 
-            <!-- CARD 1 -->
-            <div class="card">
 
-                <div class="card-icon">📄</div>
 
-                <h2>
-                    Extraction de coordonnées
-                </h2>
 
-                <p>
-                    Extrayez automatiquement les points, textes et coordonnées depuis des PDF
-                    ou images avec OCR avancé puis générez des fichiers DXF exploitables.
-                </p>
 
-                <!-- CHEMIN CONSERVÉ -->
-                <a href="/coor" class="btn">
-                    Ouvrir l'application
-                </a>
+                <!-- APPLICATIONS -->
+                <div class="cards">
 
-            </div>
+                    <!-- CARD 1 -->
+                    <div class="card">
 
-            <!-- CARD 2 -->
-            <div class="card">
+                        <div class="card-icon">
+                            <img src="/static/logo_coor.png" alt="Construction Icon" class="icon-img">
+                        </div>
 
-                <div class="card-icon">🏗️</div>
+                        <h2>
+                            Saisie Automatique des Coordonnées Lambert & Génération de Fichiers CAO
+                        </h2>
 
-                <h2>
-                    Génération 2D / 3D
-                </h2>
+                        <p>
+                            Transformez rapidement vos tableaux de coordonnées Lambert en fichiers CAO exploitables sur AutoCAD,
+                            Revit, Civil 3D, 3ds Max et d’autres logiciels de conception.
+                        </p>
 
-                <p>
-                    Analyse intelligente des zones DXF, création automatique de modèles
-                    2D et extrusion 3D pour les workflows architecturaux modernes.
-                </p>
+                        <a href="/coor" class="btn">
+                            Ouvrir l'application
+                        </a>
 
-                <!-- CHEMIN CONSERVÉ -->
-                <a href="/2d3d" class="btn">
-                    Ouvrir l'application
-                </a>
+                    </div>
 
-            </div>
+                    <!-- CARD 2 -->
+                    <div class="card">
 
-        </div>
+                        <div class="card-icon">
+                            <img src="/static/logo_2d3d.png" alt="Construction Icon" class="icon-img">
+                        </div>
 
-    </section>
+                        <h2>
+                            Plan Masse : Conversion 2D vers 3D CAO
+                        </h2>
+
+                        <p>
+                            Transformez vos plans masse 2D en modèles 3D professionnels prêts pour les logiciels CAO.
+                            Notre service génère automatiquement un plan masse 3D précis à partir de vos fichiers 2D,
+                            compatible avec AutoCAD, Revit, 3ds Max et autres outils BIM et DAO.
+                        </p>
+
+                        <a href="/2d3d" class="btn">
+                            Ouvrir l'application
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <!-- === ABOUT US====== -->
+                <div id="about">
+
+                    <!--div class="about-header">
+                    </div-->
+
+                    <section class="about-card">
+                        <br>
+
+                        <h2>À Propos Nous</h2>
+
+                        <p>
+                            Nous sommes une équipe d’experts en architecture, urbanisme et design intérieur,
+                            avec jusqu’à 20 ans d’expérience dans les solutions de conception numérique.
+
+                            Nous développons une plateforme en ligne permettant de simplifier et d’accélérer les services architecturaux,
+                            en rendant les outils professionnels accessibles partout dans le monde en moins d’une minute.
+                        </p>
+
+
+
+                        <p>
+                            Nos solutions couvrent la conversion du tableau de bornage en plan cadastral et la conversion de plans 2D en modèles 3D,
+                            à destination des architectes, ingénieurs et promoteurs immobiliers.
+
+                        </p>
+
+                        <div class="features">
+
+                            <div class="feature-box">
+                                <div class="badge-icon">⚡</div>
+                               
+
+                                <p>Livraison Rapide
+                                    <br>
+                                    Génération rapide de résultats architecturaux grâce à des workflows optimisés.
+                                </p>
+                            </div>
+
+                            <div class="feature-box">
+                                <div class="badge-icon">📜</div>
+                           
+
+                                <p>Grande Expérience
+                                    <br>
+                                    Notre équipe possède jusqu’à 20 ans d’expérience professionnelle.
+                                </p>
+                            </div>
+
+                            <div class="feature-box">
+                                <div class="badge-icon2">🌐</div>
+                                
+                               
+
+                                <p>Services en Ligne
+                                    <br>
+                                    Accédez à nos services architecturaux depuis n’importe où dans le monde.
+                                </p>
+                            </div>
+
+                            <div class="feature-box">
+                                    <div class="badge-icon2">📐</div>
+
+
+                                <p>Solutions CAO & 3D
+                                    <br>
+                                    Conversion du tableau de bornage en plan cadastral et
+                                    conversion de plans 2D en modèles 3D précis compatibles BIM et CAO.
+                                </p>
+                            </div>
+
+
+
+                        </div>
+
+                    </section>
+
+                </div>
+
+
+
 
     <!-- =========================
          FOOTER
@@ -358,31 +1013,53 @@
 
     <footer>
 
-        <div id="about">
-            <strong>About Us</strong><br><br>
-            Plateforme SaaS spécialisée dans l’automatisation des traitements DXF
-            pour les architectes et professionnels du bâtiment.
-        </div>
 
-        <br><br>
+                <div id="contact">
+                    <br>
+                      <div class="container">
+                        <form method="post" action="/send-message"  name="contact-form">
 
-        <div id="privacy">
-            <strong>Privacy Policy</strong><br><br>
-            Vos fichiers restent sécurisés et ne sont jamais partagés avec des tiers.
-        </div>
+                         <h4>Contact Us</h4>
+                         <input type="text" name="your-name" placeholder="Name" required>
+                         <input type="text" name="your-number" placeholder="Number" required>
+                         <input type="email" name="your-email" placeholder="Email" required>
+                         <textarea name="message" rows="7" placeholder="Your Message" required></textarea>
+                         <input type="submit" value="Submit" id="submit">
 
-        <br><br>
+                        </form>
+                      </div>
 
-        <div id="contact">
-            <strong>Contact</strong><br><br>
-            contact@archdxf.com
-        </div>
 
-        <br><br>
+                </div>
 
-        © 2026 - ARCH DXF Platform
+        <br><br><br>
+
+        © 2026 - ARCHILABTOOLS Platform
 
     </footer>
+
+
+    <script>
+const form = document.forms['contact-form'];
+
+form.addEventListener('submit', async (e) => {
+
+    e.preventDefault();
+
+    const response = await fetch('/send-message', {
+        method: 'POST',
+        body: new FormData(form)
+    });
+
+    const result = await response.text();
+
+    alert(result);
+
+    form.reset();
+
+});
+</script>
+
 
 </body>
 </html>

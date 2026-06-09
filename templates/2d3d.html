@@ -3,213 +3,311 @@
 <head>
 <meta charset="UTF-8">
 <title>DXF Zone Generator - 2D/3D</title>
+
 <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
+*{  margin:0;
+    padding:0;
+    box-sizing:border-box}
+html{
+    height:100%;}
+:root{
+    --bg:#f5f5f3;
+    --text:#1f1f1f;
+    --muted:#777;
+    --line:#e5e5e5;
+    --accent:#111;
+    --white:#ffffff;
+    --orange:#ffa602;
+    --orangef:#926004;
+    --bleuc:#6f819f;
+    --bleuf:#0f141c;
+    --vert:#80d707;   
+    
 
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        min-height: 100vh;
-        padding: 20px;
-    }
 
-    .container {
-        max-width: 800px;
-        margin: 0 auto;
-    }
 
-    .header {
-        background: white;
-        border-radius: 10px;
-        padding: 20px;
-        margin-bottom: 20px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+    --hover:#fafafa;
+    --success:#2f855a;
+    --success-bg:#f0fff4;
+    --error:#c53030;
+    --error-bg:#fff5f5;
+    --info:#2b6cb0;
+    --info-bg:#ebf8ff;
+}
+body{
+            font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;
+            min-height:100vh;
+            padding-bottom: 0px;          /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+            background-attachment: fixed;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;
+            /* background:var(--bg); */
+            color:var(--text);
+            background-color: #0f141c;
+            /* Effet de fond technique texturé */
+            background-image:
+                radial-gradient(circle at 50% 30%, rgba(30, 41, 59, 0.6) 0%, rgba(15, 20, 28, 1) 70%),
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+            display:flex;
+            flex-direction:column;}
+.container{
+    display:flex;
+    flex-direction:column;
 
-    .header h1 {
-        color: #667eea;
-        font-size: 1.5rem;
-    }
 
-    .home-link {
-        padding: 10px 20px;
-        background: #667eea;
-        color: white;
-        text-decoration: none;
-        border-radius: 5px;
-        transition: background 0.3s;
-    }
+    align-items:center;     /* horizontal */
+    /*justify-content:center; /* vertical */
+    /*min-height:100vh;       /* important pour centrage vertical */
+width:100%;
+max-width:95%;
+margin:auto;
+gap:20px;
+padding-top:40px;
+margin-top:35px;}
+.card{
+        width: 65%;
+        max-width: 95%;
+        
+background:var(--white);
+border:1px solid var(--line);
+border-radius:18px;
+padding:25px;
+display:flex;
+flex-direction:column;
+gap:20px;
 
-    .home-link:hover {
-        background: #5a67d8;
-    }
+    backdrop-filter:blur(15px);
+    -webkit-backdrop-filter:blur(15px);
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.1),
+    0 20px 40px rgba(0, 0, 0, 0.4);
 
-    .card {
-        background: white;
-        border-radius: 10px;
-        padding: 30px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
+    line-height:1.7;
+    border-radius:25px;
+    text-align: center;
+    padding-top:50px ;
+    padding-bottom:70px ;
+}
 
-    .upload-area {
-        border: 2px dashed #667eea;
-        border-radius: 10px;
-        padding: 40px;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.3s;
-        margin-bottom: 20px;
-    }
+    .card h2{
+       color: var(--orange);    }
+    .card h4{
+       color: var(--white);    }
 
-    .upload-area:hover {
-        background: #f7fafc;
-        border-color: #5a67d8;
-    }
+.upload-icon{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin-bottom:15px;}
+.upload-icon img{
+    width:80px;
+    height:auto;}
+.upload-area{
+padding:40px 20px;
+text-align:center;
+background:transparent;
+    border:2px dashed var(--bleuc);
+    border-radius: 25px;
+    cursor:pointer;
+    transition:.3s;}
+.upload-area:hover{
+    border-color:var(--orange);
+    /* background:var(--hover) */}
+.upload-area p{
+        color: var(--bleuc);}
+ 
+/* Footer */
+footer{
+    margin-top:auto;      /* pousse le footer vers le bas */
+    padding-top:53px;     /* espace au-dessus du footer */}
+#footer{
+    text-align:center;
+    padding:25px;
+    color:var(--bleuc);}
 
-    .upload-area.drag-over {
-        background: #ebf8ff;
-        border-color: #4299e1;
-    }
+/* ===================== NAVBAR ===================== */
+.navbar{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+z-index:1000;
+backdrop-filter:blur(10px);
+/* background:rgba(255,255,255,.92); */
+/* border-bottom:1px solid var(--line); */}
+.nav-container{
+max-width:1300px;
+margin:auto;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:18px 40px;}
+    .logo{
+        display:flex;
+        gap:24px;
+        align-items:center;
+        color:var(--white);
+        text-decoration:none}
+    .logo img{width:62px;height:62px;object-fit:cover}
+    .logo span{font-size:20px;font-weight:700}
+    /*.nav-links{display:flex;gap:35px;align-items:center}
+    .nav-links a{
+    text-decoration:none;color:#444;position:relative;transition:.3s}
+    .nav-links a:hover{color:#000}
+    .nav-links a::after{
+    content:"";position:absolute;left:0;bottom:-6px;
+    width:0;height:1px;background:#000;transition:.3s}
+    .nav-links a:hover::after{width:100%}*/
 
-    .file-input {
-        display: none;
-    }
 
-    .upload-icon {
-        font-size: 48px;
-        margin-bottom: 10px;
-    }
+.file-input{/*HAID BTN nouveu fichier */
+    display:none}
+.file-info,.file-name{
+        font-size:.9rem;
+        color:var(--orange)}    
 
-    .file-info {
-        margin-top: 10px;
-        color: #718096;
-    }
+/* ===================== RESULT generate termine ============== */
+.result{
+    text-align:center;
+    color:var(--orange);
+    display:none;}
+.result h3{
+    color: var(--orange);    }
+/* ===================== BTN ===================== */
+.btn { 
+    width:100%;
+    /* border:1px solid var(--line); */
+    cursor:pointer;
+    padding: 13px 17px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, #ffa602 0%, #926004 100%);    /*            --orange:#ffa602;            --orangef:#926004;         */
+    border: 1px solid rgba(237, 212, 170, 0.3);
+    color: #ffffff;
+    box-shadow: 0 4px 15px rgba(110, 78, 31, 0.35);}
+.btn:hover {
+    transform: translateY(-2px);
+    border-color: rgba(237, 212, 170, 0.6);
+    box-shadow: 0 10px 25px rgba(166, 124, 55, 0.55);}
+.btn:disabled{/*HAID OTHER BTN*/
+    opacity:.6;
+    cursor:not-allowed;}
 
-    .btn {
-        width: 100%;
-        padding: 12px;
-        background: #667eea;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        font-size: 16px;
-        cursor: pointer;
-        transition: background 0.3s;
-    }
 
-    .btn:hover:not(:disabled) {
-        background: #5a67d8;
-    }
 
-    .btn:disabled {
-        background: #cbd5e0;
-        cursor: not-allowed;
-    }
+/* ===================== PROGRESS ===================== */
+.progress{display:none;
+    flex-direction:column;
+    gap:10px}
+.progress-bar{
+    height:8px;
+    background:var(--line);
+    border-radius:20px;
+    overflow:hidden}
+.progress-fill{
+    height:100%;
+    width:0;
+    background:var(--vert);
+    transition:.3s}
+/* ===================== MESSAGES ===================== */
+.message{padding:12px;border-radius:10px;font-size:.92rem;display:none}
+.success{background:var(--success-bg);color:var(--success);border:1px solid #9ae6b4}
+.error{background:var(--error-bg);color:var(--error);border:1px solid #feb2b2}
+.info{background:var(--info-bg);color:var(--info);border:1px solid #90cdf4}
+/* ===================== DOWNLOAD BTN ===================== */
+#download3dBtn{
+    position:relative;border:1px solid var(--orange);font-weight:700;}
+#download3dBtn::after{
+    content:"";position:absolute;width:6px;height:6px;
+    background:var(--orange);border-radius:50%;
+    box-shadow:0 0 8px var(--orangef);
+    animation:orbit 4s linear infinite;}
+@keyframes orbit{
+    0%{top:-3px;left:0}
+    25%{top:-3px;left:calc(100% - 6px)}
+    50%{top:calc(100% - 6px);left:calc(100% - 6px)}
+    75%{top:calc(100% - 6px);left:0}
+    100%{top:-3px;left:0}
+}
 
-    .progress {
-        margin-top: 20px;
-        display: none;
-    }
+.upload-area h3{font-size:1rem;
+font-weight:600;
+margin-bottom:8px}
+.upload-area.drag-over{border-color:var(--accent);background:#f7f7f7}
 
-    .progress-bar {
-        width: 100%;
-        height: 30px;
-        background: #edf2f7;
-        border-radius: 15px;
-        overflow: hidden;
-    }
+/* ===================== BUTTONS ===================== */
 
-    .progress-fill {
-        height: 100%;
-        background: #48bb78;
-        transition: width 0.3s;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-weight: bold;
-    }
 
-    .result {
-        margin-top: 20px;
-        display: none;
+/* ===================== RESPONSIVE ===================== */
+@media(max-width:768px){
+    .container{padding-top:20px;
     }
+    .card{padding:18px;
+        max-width: 55%;
+    }
+    .upload-area{padding:30px 15px}
+} 
 
-    .result-buttons {
-        display: flex;
-        gap: 10px;
-        margin-top: 20px;
-    }
+    .mypage{
+    color: var(--orange);
+    margin-top: 150px;
+    text-align: center;}
 
-    .result-btn {
-        flex: 1;
-        background: #48bb78;
-    }
 
-    .result-btn:hover {
-        background: #38a169;
-    }
-
-    .message {
-        margin-top: 10px;
-        padding: 10px;
-        border-radius: 5px;
-        display: none;
-    }
-
-    .message.success {
-        background: #c6f6d5;
-        color: #22543d;
-        border: 1px solid #9ae6b4;
-    }
-
-    .message.error {
-        background: #fed7d7;
-        color: #742a2a;
-        border: 1px solid #fc8181;
-    }
-
-    .message.info {
-        background: #bee3f8;
-        color: #2c5282;
-        border: 1px solid #90cdf4;
-    }
-
-    .file-name {
-        margin-top: 10px;
-        padding: 10px;
-        background: #edf2f7;
-        border-radius: 5px;
-        text-align: center;
-        display: none;
-    }
+/* ===================== HIDDEN ===================== */
+#download2dBtn{width:1px;height:.2px;opacity:0}
 </style>
+
+
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
-        <h1>🏗️ Génération 2D/3D depuis DXF</h1>
-        <a href="/2d3d" class="home-link">🏠 Accueil</a>
+    <div class="navbar">
+        <div class="nav-container">
+                                <!-- LOGO -->
+            <a href="/" class="logo">
+                <img src="/static/logo-200.png" alt="Logo">
+                <span>ARCHILABTOOLS</span>
+            </a>
+
+        <!-- <a href="/" class="home-link">🏠 Accueil</a> -->
+        </div>
     </div>
 
+
+<div class="mypage">
+    <h1>Transformation d’un plan masse 2D vers un modèle 3D</h1>
+</div>
+
+
+
+<div class="container">
+
     <div class="card">
+           <h2>        Modélisez 3D AUTOMATIQUEMENT  </h2>
+    <h4>        Modélisez mon plan 2D en 3D en une maquette brute facilement, en quelques clics    </h4>
+    <br>
         <div class="upload-area" id="uploadArea">
-            <div class="upload-icon">📁</div>
+            <!-- <div class="upload-icon">📁</div> -->
+                        <div class="upload-icon">
+              <img src="/static/01.png" alt="Upload Icon">
+            </div>
+
             <p>Glissez-déposez votre fichier DXF ici</p>
             <p class="file-info">ou cliquez pour sélectionner</p>
             <input type="file" id="fileInput" accept=".dxf" class="file-input">
         </div>
-
+        
+        
         <div id="fileName" class="file-name"></div>
-
         <button id="generateBtn" class="btn" disabled>🚀 Générer 2D/3D</button>
 
         <div class="progress" id="progress">
@@ -221,8 +319,9 @@
         <div class="result" id="result">
             <h3>✅ Génération terminée !</h3>
             <div class="result-buttons">
-                <button id="download2dBtn" class="btn result-btn">📥 Télécharger 2D</button>
-                <button id="download3dBtn" class="btn result-btn">📥 Télécharger 3D</button>
+                <button id="download2dBtn" class="btn result-btn">...</button>
+                <br>
+                <button id="download3dBtn" class="btn result-btn">📥 TÉLÉCHARGER TON FICHIER 3D</button>
             </div>
         </div>
 
@@ -230,157 +329,288 @@
     </div>
 </div>
 
+<footer>
+    <div id="footer">    © 2026 - ARCHILABTOOLS Platform   </div>
+</footer>
+
+
+
+<!-- changer limile cherche a                            //milit_10                   -->
 <script>
     let uploadedFile = null;
-    let file2dUrl = null;
-    let file3dUrl = null;
+let file2dUrl = null;
+let file3dUrl = null;
 
-    const uploadArea = document.getElementById('uploadArea');
-    const fileInput = document.getElementById('fileInput');
-    const generateBtn = document.getElementById('generateBtn');
-    const progress = document.getElementById('progress');
-    const progressFill = document.getElementById('progressFill');
-    const result = document.getElementById('result');
-    const messageDiv = document.getElementById('message');
-    const download2dBtn = document.getElementById('download2dBtn');
-    const download3dBtn = document.getElementById('download3dBtn');
-    const fileNameDiv = document.getElementById('fileName');
+const uploadArea = document.getElementById('uploadArea');
+const fileInput = document.getElementById('fileInput');
+const generateBtn = document.getElementById('generateBtn');
+const progress = document.getElementById('progress');
+const progressFill = document.getElementById('progressFill');
+const result = document.getElementById('result');
+const messageDiv = document.getElementById('message');
+const download2dBtn = document.getElementById('download2dBtn');
+const download3dBtn = document.getElementById('download3dBtn');
+const fileNameDiv = document.getElementById('fileName');
 
-    function showMessage(text, type) {
-        messageDiv.textContent = text;
-        messageDiv.className = `message ${type}`;
-        messageDiv.style.display = 'block';
-        setTimeout(() => {
-            messageDiv.style.display = 'none';
-        }, 5000);
+
+// ========================
+// 🔥 LIMIT SYSTEM (5 / 24h)
+// ========================
+const LIMIT = 13;                       //milit_10
+const WINDOW = 24 * 60 * 60 * 1000;
+
+function getLimitData() {
+    return JSON.parse(localStorage.getItem("gen_limit")) || {
+        count: 0,
+        startTime: null
+    };
+}
+
+function saveLimitData(data) {
+    localStorage.setItem("gen_limit", JSON.stringify(data));
+}
+
+function formatTime(ms) {
+    let s = Math.floor(ms / 1000);
+    let h = Math.floor(s / 3600);
+    let m = Math.floor((s % 3600) / 60);
+    let sec = s % 60;
+    return `${h}h ${m}m ${sec}s`;
+}
+
+function updateButtonState() {
+    let data = getLimitData();
+    let now = Date.now();
+
+    // reset after 24h
+    if (data.startTime && now - data.startTime > WINDOW) {
+        data = { count: 0, startTime: null };
+        saveLimitData(data);
     }
 
-    function updateProgress(percent, text) {
-        progress.style.display = 'block';
-        progressFill.style.width = `${percent}%`;
-        progressFill.textContent = text || `${percent}%`;
+    let remaining = LIMIT - data.count;
+
+    if (remaining > 0) {
+        generateBtn.disabled = false;
+        generateBtn.style.background = "";
+        generateBtn.textContent = `🚀 Générer 2D/3D (${remaining} restants)`;
+        return;
     }
 
-    uploadArea.addEventListener('click', () => {
-        fileInput.click();
-    });
+    // LOCK
+    generateBtn.disabled = true;
+    generateBtn.style.background = "gray";
 
-    uploadArea.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        uploadArea.classList.add('drag-over');
-    });
+    let end = data.startTime + WINDOW;
 
-    uploadArea.addEventListener('dragleave', () => {
-        uploadArea.classList.remove('drag-over');
-    });
+    function tick() {
+        let diff = end - Date.now();
 
-    uploadArea.addEventListener('drop', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('drag-over');
-        const file = e.dataTransfer.files[0];
-        if (file && file.name.endsWith('.dxf')) {
-            handleFile(file);
-        } else {
-            showMessage('Veuillez sélectionner un fichier DXF valide', 'error');
-        }
-    });
-
-    fileInput.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            handleFile(file);
-        }
-    });
-
-    function handleFile(file) {
-        uploadedFile = file;
-        const formData = new FormData();
-        formData.append('file', file);
-
-        fileNameDiv.textContent = `📄 Fichier: ${file.name}`;
-        fileNameDiv.style.display = 'block';
-        
-        updateProgress(30, 'Upload en cours...');
-
-        fetch('/upload', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'uploaded') {
-                updateProgress(100, 'Upload terminé !');
-                setTimeout(() => {
-                    progress.style.display = 'none';
-                    generateBtn.disabled = false;
-                    showMessage(`Fichier "${file.name}" chargé avec succès`, 'success');
-                }, 500);
-            } else {
-                throw new Error('Upload failed');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            progress.style.display = 'none';
-            showMessage('Erreur lors de l\'upload du fichier', 'error');
-        });
-    }
-
-    generateBtn.addEventListener('click', () => {
-        if (!uploadedFile) {
-            showMessage('Veuillez d\'abord charger un fichier DXF', 'error');
+        if (diff <= 0) {
+            localStorage.removeItem("gen_limit");
+            updateButtonState();
             return;
         }
 
-        generateBtn.disabled = true;
-        updateProgress(50, 'Génération en cours...');
+        generateBtn.textContent = `⏳ Réessayer dans ${formatTime(diff)}`;
+        requestAnimationFrame(tick);
+    }
 
-        // ROUTE CORRIGÉE: /generate_2d3d au lieu de /generate
-        fetch('/generate_2d3d', {
-            method: 'POST'
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.text().then(text => {
-                    throw new Error(text || 'Erreur serveur');
-                });
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.error) {
-                throw new Error(data.error);
-            }
-            updateProgress(100, 'Génération terminée !');
-            file2dUrl = data.file2d;
-            file3dUrl = data.file3d;
-            
+    tick();
+}
+
+function registerGenerateClick() {
+    let data = getLimitData();
+    let now = Date.now();
+
+    if (!data.startTime) {
+        data.startTime = now;
+    }
+
+    data.count += 1;
+    saveLimitData(data);
+
+    updateButtonState();
+}
+
+
+// ========================
+// 🔥 UI FUNCTIONS
+// ========================
+function showMessage(text, type) {
+    messageDiv.textContent = text;
+    messageDiv.className = `message ${type}`;
+    messageDiv.style.display = 'block';
+
+    setTimeout(() => {
+        messageDiv.style.display = 'none';
+    }, 2000);
+}
+
+function updateProgress(percent, text) {
+    progress.style.display = 'block';
+    progressFill.style.width = `${percent}%`;
+    progressFill.textContent = text || `${percent}%`;
+}
+
+function resetUI() {
+    result.style.display = 'none';
+    file2dUrl = null;
+    file3dUrl = null;
+}
+
+
+// ========================
+// 🔥 FILE UPLOAD SYSTEM
+// ========================
+uploadArea.addEventListener('click', () => fileInput.click());
+
+uploadArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadArea.classList.add('drag-over');
+});
+
+uploadArea.addEventListener('dragleave', () => {
+    uploadArea.classList.remove('drag-over');
+});
+
+uploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.classList.remove('drag-over');
+
+    const file = e.dataTransfer.files[0];
+    if (file && file.name.endsWith('.dxf')) {
+        handleFile(file);
+    } else {
+        showMessage('Veuillez sélectionner un fichier DXF valide', 'error');
+    }
+});
+
+fileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) handleFile(file);
+});
+
+function handleFile(file) {
+    uploadedFile = file;
+
+    resetUI();
+
+    generateBtn.style.display = 'block';
+    generateBtn.disabled = true;
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    fileNameDiv.textContent = `📄 Fichier: ${file.name}`;
+    fileNameDiv.style.display = 'block';
+
+    updateProgress(30, 'Upload en cours...');
+
+    fetch('/upload', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'uploaded') {
+            updateProgress(100, 'Upload terminé !');
+
             setTimeout(() => {
                 progress.style.display = 'none';
-                result.style.display = 'block';
                 generateBtn.disabled = false;
-                showMessage('Fichiers 2D et 3D générés avec succès !', 'success');
+                showMessage(`Fichier "${file.name}" chargé avec succès`, 'success');
             }, 500);
-        })
-        .catch(error => {
-            console.error('Error:', error);
+        } else {
+            throw new Error('Upload failed');
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        progress.style.display = 'none';
+        showMessage('Erreur upload fichier', 'error');
+    });
+}
+
+
+// ========================
+// 🔥 GENERATE BUTTON
+// ========================
+generateBtn.addEventListener('click', () => {
+
+    if (!uploadedFile) {
+        showMessage('Veuillez d\'abord charger un fichier DXF', 'error');
+        return;
+    }
+
+    // LIMIT CHECK
+    let data = getLimitData();
+    let now = Date.now();
+
+    if (data.startTime && (now - data.startTime < WINDOW) && data.count >= LIMIT) {
+        showMessage("Limite atteinte (13/24h)", "error");         //milit_10
+        updateButtonState();
+        return;
+    }
+
+    registerGenerateClick();
+
+    generateBtn.disabled = true;
+    updateProgress(50, 'Génération en cours...');
+
+    fetch('/generate_2d3d', {
+        method: 'POST'
+    })
+    .then(res => {
+        if (!res.ok) {
+            return res.text().then(t => { throw new Error(t); });
+        }
+        return res.json();
+    })
+    .then(data => {
+
+        if (data.error) throw new Error(data.error);
+
+        updateProgress(100, 'Génération terminée !');
+
+        file2dUrl = data.file2d;
+        file3dUrl = data.file3d;
+
+        setTimeout(() => {
             progress.style.display = 'none';
-            generateBtn.disabled = false;
-            showMessage('Erreur lors de la génération: ' + error.message, 'error');
-        });
-    });
+            result.style.display = 'block';
 
-    download2dBtn.addEventListener('click', () => {
-        if (file2dUrl) {
-            window.location.href = file2dUrl;
-        }
-    });
+            generateBtn.style.display = 'none';
 
-    download3dBtn.addEventListener('click', () => {
-        if (file3dUrl) {
-            window.location.href = file3dUrl;
-        }
+            showMessage('Fichiers 2D et 3D générés avec succès !', 'success');
+        }, 500);
+    })
+    .catch(err => {
+        console.error(err);
+        progress.style.display = 'none';
+        generateBtn.disabled = false;
+
+        showMessage('Erreur: ' + err.message, 'error');
     });
+});
+
+
+// ========================
+// 🔥 DOWNLOADS
+// ========================
+download2dBtn.addEventListener('click', () => {
+    if (file2dUrl) window.location.href = file2dUrl;
+});
+
+download3dBtn.addEventListener('click', () => {
+    if (file3dUrl) window.location.href = file3dUrl;
+});
+
+
+// ========================
+// 🔥 INIT
+// ========================
+updateButtonState();
 </script>
 
 </body>

@@ -2,177 +2,567 @@
 <html>
 <head>
     <title>OCR + DXF Generator</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .container {
-            display: flex;
-            justify-content: center;
-            width: 100%;
-            gap: 20px;
-        }
 
-        .div1 {
-            width: 70%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .div2 { 
-            width: 30%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
 
-        textarea { width: 100%; box-sizing: border-box; margin-bottom: 10px; }
-        button { padding: 10px 10px; margin: 5px 0; cursor: pointer; }
-        .point { 
-            margin-bottom: 8px;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        .point.selected {
-            background-color: #e8f4fd;
-            border-color: #3498db;
-        }
-        .point input[type="checkbox"] {
-            margin: 0;
-            cursor: pointer;
-            width: 18px;
-            height: 18px;
-        }
-        .point input[type="text"],
-        .point input[type="number"] {
-            padding: 5px;
-            border: 1px solid #ddd;
-            border-radius: 3px;
-        }
-        .point .title-input {
-            width: 100px;
-        }
-        .point .coord-input {
-            width: 120px;
-        }
+<style>
+    *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;    }
+    :root{
 
-        #loadingBox{
-           width:100%;
-           height:6px;
-           background:#ddd;
-           margin-top:10px;
-           position:relative;
-           display:none;
-           overflow:hidden;
-        }
+            --bg:#f5f5f3;
+            --text:#1f1f1f;
+            --muted:#777;
+            --line:#e5e5e5;
+            --accent:#111;
+            --white:#ffffff;
 
-        #loadingBar{
-            position:absolute;
-            width:50%;
-            height:100%;
-            background:#3498db;
-            animation:load 1.5s infinite;
-        }
+            --orange:#ffa602;
+            --orangef:#926004;
 
-        #loadingPercent{
-            position:absolute;
-            right:5px;
+
+
+            --bleuc:#6f819f;
+            --bleuf:#0f141c;
+
+
+            --vert:#80d707;              }
+    body{
+        font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;
+        min-height:100vh;
+        padding-bottom: 0px;          /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+        background-attachment: fixed;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+            font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;
+            /* background:var(--bg); */
+            color:var(--text);
+            background-color: #0f141c;
+            /* Effet de fond technique texturé */
+            background-image:
+                radial-gradient(circle at 50% 30%, rgba(30, 41, 59, 0.6) 0%, rgba(15, 20, 28, 1) 70%),
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column; }
+    body{display:flex;flex-direction:column;}
+/*LAYOUT */
+    .container{
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        gap:20px;
+        width:100%;
+        padding-top:40px;    }
+    .div1, .div2{
+        width: 65%;
+        /* max-width: 95%; */
+        border:1px solid var(--line);
+        padding:20px;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+    backdrop-filter:blur(15px);
+    -webkit-backdrop-filter:blur(15px);
+
+    background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.1),
+        0 20px 40px rgba(0, 0, 0, 0.4);
+
+        line-height:1.7;
+        border-radius:25px;
+        text-align: center;   }
+    
+        .div2{
+        margin-top: 50px;    }
+    .div1{
+        margin-top: 50px;       }
+    .div1 h2{
+       color: var(--orange);    }
+    .div2 h2{
+       color: var(--orange);    }
+    .div2 h4{
+       color: var(--white);    }
+
+/* download_dxf */
+.download_dxf{
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        gap:10px;
+        width:100%;   /*---------fit-content-----------*/
+        padding:15px;
+        border-radius:12px;
+        margin-bottom:15px;
+        font-size: 18px;
+        border: 1px solid rgba(237, 212, 170, 0.3);
+        background: linear-gradient(135deg, #ffa602 0%, #926004 100%);    /*            --orange:#ffa602;            --orangef:#926004;         */
+        box-shadow: 0 4px 15px rgba(110, 78, 31, 0.35);
+
+        color: var(--white);        }
+.download_dxf:hover{
+   
+    transform: translateY(-2px);
+border-color: rgba(237, 212, 170, 0.6);
+box-shadow: 0 10px 25px rgba(166, 124, 55, 0.55);
+scale: 1.02; 
+}             
+/* .point.selected{
+                    border-color:var(--accent);
+                    background:#fafafa;    } */
+             
+/* AJOUT POINT */
+    .ajouter{
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        gap:10px;    }
+button{    
+width:180px;
+cursor:pointer;
+padding: 13px 17px;
+border-radius: 12px;
+font-size: 14px;
+font-weight: 600;
+text-decoration: none;
+transition: all 0.3s ease;
+border: 1px solid rgba(237, 212, 170, 0.3);
+color: #ffffff;
+background: linear-gradient(135deg, #ffa602 0%, #926004 100%);    /*            --orange:#ffa602;            --orangef:#926004;         */
+box-shadow: 0 4px 15px rgba(110, 78, 31, 0.35);}
+button:hover{       
+transform: translateY(-2px);
+border-color: rgba(237, 212, 170, 0.6);
+box-shadow: 0 10px 25px rgba(166, 124, 55, 0.55);
+scale: 1.02;   }
+
+
+
+
+
+
+
+
+/*POINT TROUVÉ*/
+    .points-header{/*POINT TROUVÉ*/
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        gap:10px;
+        width:100%;
+        padding:12px;
+        border:1px solid var(--bleuc);
+        border-radius:12px;
+        /*background:#e6ffc3;    /*fff*/
+        margin-bottom:15px;    }
+    .points-count{/*POINT TROUVÉ*/
+        padding:4px 10px;
+        border-radius:5px;
+        /*background: #e6ffc3;  /*e7e7e7*/
+        color:var(--bleuc);
+
+        font-size:18px;    }
+ /* .select-all-btn{
+        font-size:12px;
+        padding:6px 10px;    } */
+/* HIDDEN ELEMENTS */
+    textarea{/*height:0;*/
+        width:100%;
+        height:0;
+        opacity:0;    }
+    #btn_conv{/*height:0;*/
+        height:0;
+        opacity:0;    }
+</style>
+
+<style>
+/* POINTS */
+.point{
+        display:flex;
+        align-items:center;
+        gap:10px;
+        padding:12px;
+        border-radius:12px;
+        margin-bottom:10px;
+        transition:0.2s;
+        border:1px solid var(--bleuc);
+        background:var(--bleuF);
+        flex-wrap:wrap;    }
+.point:hover{
+        border-color:var(--orange);    }       
+.point input[type="text"], .point input[type="number"]{
+            padding:8px;
+            border-radius:6px;
+            outline:none;
+            border:1px solid var(--bleuc);
+            font-size:0.9rem;   }
+.point input:focus{
+                border-color:var(--orange);
+            /* background-color: #80d707;     */}
+/* FORM UPLOAD*/
+  .title-input{
+      max-width:100px ;
+      /* background-color: #e8e8e8; */
+      color: var(--white);
+      font-weight: bold;
+      background-color: transparent; 
+      text-align: center;  }
+  .coord-input{
+    text-align: center;
+        max-width:150px ;
+      color: var(--white);
+        background-color: transparent; 
+        /*background-color: rgba(23, 5, 159, 0.1);/*transparent*/
+        /* font-weight: bold;    */}
+
+/* ?????????? ZONE UPLOAD ???????? */
+#uploadForm input[type="file"]{
+    width:100%;
+    padding: 40px 20px;
+    margin:auto;
+    display:block; }
+#uploadForm{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    width:100%;
+    margin:20px 0;
+    /* background-color: #777; */
+    margin-bottom: -70px;}
+
+/*----------------------------------------*/
+/* #uploadForm input[type="file"]::file-selector-button{
+
+    text-align:center;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    margin-right:15px;
+    padding:10px 15px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+
+    width:100%;
+    height:190px;
+
+    border:2px dashed #d6d6d6;
+    border-radius:16px;
+    background:#fcfcfc;
+
+    cursor:pointer;} */
+/* #uploadForm input[type="file"]:hover{
+    border-color:#999;
+    background:#f7f7f7;} */
+/* #uploadForm input[type="file"]:focus{
+    outline:none;
+    border-color:#111;
+    box-shadow:0 0 10px rgba(0,0,0,0.08);} */
+
+/*LOADING*/
+#loadingBox{
+    width:100%;
+    height:6px;
+    background:#e5e5e5;
+    border-radius:20px;
+    overflow:hidden;
+    display:none;
+    margin-top:15px;
+    position:relative;}
+#loadingBar{
+    position:absolute;
+    left:-40%;
+    width:40%;
+    height:100%;
+    background:var(--orange);
+    animation:load 1.2s infinite;}
+#loadingPercent{
+    position:absolute;
+    right:8px;
+    top:-20px;
+    font-size:12px;
+    color:#777;}
+@keyframes load{
+    0%{
+        left:-40%;
+    }
+    100%{
+        left:100%;    }  }
+
+/* Loading */
+#loadingBox{
+    width:100%;
+    height:8px;
+
+    background:#e5e5e5;
+    border-radius:30px;
+
+    overflow:hidden;
+    display:none;
+
+    margin-top:15px;
+    position:relative;}
+#loadingBar{
+    background:linear-gradient(
+        90deg,
+        transparent,
+        /* #80d707,
+        #c2f877,
+        #80d707, */
+        #926004,
+        #ffa602,
+        #926004,
+        transparent
+    );
+
+    animation:uploadMove 1s linear infinite;}
+@keyframes uploadMove{
+    from{
+        left:-50%;
+
+    }
+    to{
+        left:100%;
+    }}
+</style>
+
+
+<style>
+#dropZone{
+    width:100%;
+    min-height:220px;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+
+    /* border-radius:16px; */
+    /* background:#fcfcfc; */
+    
+    border:2px dashed var(--bleuc);
+    border-radius: 25px;
+    cursor:pointer;
+    transition:.3s;
+    text-align:center;
+    padding:25px;}
+#dropZone:hover{
+    border-color:var(--orange);
+    /* background:var(--bleuc); */}
+.drop-icon{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin-bottom:15px;}
+.drop-icon img{
+    width:80px;
+    height:auto;}
+.drop-title{
+    font-size:20px;
+    font-weight:700;
+    margin-bottom:10px;
+        color:var(--bleuc); }
+.drop-subtitle{
+    font-size:14px;
+    color:var(--bleuc);}
+
+/* NAME FILE UPLOADER */
+#fileInput{ /*opacity:0*/
+        height: 5px;
+        opacity:0;
+
+    /*display:none;*/}
+#uploadedFileName{
+    margin-top:15px;
+    font-weight:700;
+    color:var(--bleuc);                  /*=========================================ff9100==========================================*/
+    word-break:break-word;}
+</style>
+
+<!--    NAVBAR ET FOOTER -->
+<style>
+        .navbar{
+            width:100%;
+            background:var(--bleuf);
+            backdrop-filter:blur(1px);
+
+            position:fixed;
             top:0;
-            font-size:12px;
-            line-height:20px;
-        }
+            left:0;
+            z-index:1000;        }
+        .nav-container{
+            max-width:1300px;
+            margin:auto;
 
-        @keyframes load{
-            0%{left:-50%;}
-            100%{left:100%;}
-        }
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+
+            padding:18px 40px;        }
+        .logo{
+            display:flex;
+            align-items:center;
+            gap:24px;
+
+            text-decoration:none;
+            color:var(--white);        }
+        .logo img{
+            width:62px;
+            height:62px;
+            object-fit:cover;
+            border-radius:3px;        }
+        .logo span{
+            font-size:20px;
+            font-weight:710;
+            letter-spacing:1px;        }
+
+        footer{
+        margin-top:auto;      /* pousse le footer vers le bas */
+        padding-top:53px;     /* espace au-dessus du footer */}
+        #footer{
+        text-align:center;
+        padding:25px;
+        color:var(--bleuc);}
+
+/* titre de la page */
+.mypage{
+    color: var(--orange);
+    margin-top: 150px;
+    text-align: center;}
+
+</style>
+<style>
+@media(max-width: 1000px){
+    .container {
+        width: 100%;
         
-        .points-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            margin-bottom: 10px;
-            padding: 10px;
-            background: #f0f0f0;
-            border-radius: 5px;
-        }
-        
-        .points-count {
-            background-color: #3498db;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 12px;
-        }
-        
-        .select-all-btn {
-            background-color: #95a5a6;
-            padding: 5px 10px;
-            font-size: 12px;
-            margin-left: 5px;
-        }
-        
-        .select-all-btn:hover {
-            background-color: #7f8c8d;
-        }
-        
-        /* منع تحديد النص عند النقر على الخلفية */
-        .page-background {
-            min-height: 100vh;
-        }
-    </style>
+    }
+
+    .div1, .div2{
+        flex: 0 1 80%;
+        /*max-width: 80%; /*c pas nececer*/
+        width: 80%;
+
+        /* margin: auto; */
+    }
+}
+
+</style>
+
 </head>
-<body class="page-background">
 
-<div class="container">
+<!--body class="page-background"-->
+<body>
 
-    <!-- Div1: قسم إدخال يدوي يظهر دائماً -->
+    <div class="navbar">
+        <div class="nav-container">
+                        <!-- LOGO -->
+            <a href="/" class="logo">
+                <img src="/static/logo-200.png" alt="Logo">
+                <span>ARCHILABTOOLS</span>
+            </a>
+
+        <!-- <a href="/" class="navbar-link">🏠 Accueil</a>-->
+        </div>
+    </div>
+
+<div class="mypage">
+    <h1>Dessine facilement ton plan cadastral en quelques clics</h1>
+</div>
+
+
+    <div class="container">
+    <!-- div2: Upload + OCR Text -->
+<div class="div2">
+
+    <h2>        SAISIR AUTOMATIQUEMENT  </h2>
+    <br>
+    <h4>        MES COORDONNÉES À PARTIR UNE IMAGE OU UN FICHIER PDF    </h4>
+    <br>
+
+    <form method="POST" action="/coor" enctype="multipart/form-data" id="uploadForm">
+
+        <label for="fileInput" id="dropZone">
+
+            <!-- <div class="drop-icon">📁</div> -->
+            <div class="drop-icon">
+              <img src="/static/01.png" alt="Upload Icon">
+            </div>
+
+
+            <div class="drop-title">
+                Glissez-déposez votre fichier IMAGE ou PDF ici
+            </div>
+
+            <div class="drop-subtitle">
+                ou cliquez pour sélectionner
+            </div>
+
+            <div id="uploadedFileName"></div>
+
+        </label>
+
+        <input type="file" id="fileInput" name="file">
+
+        <div id="loadingBox">
+            <div id="loadingBar"></div>
+        </div>
+
+    </form>
+
+    {% if text %}
+    <textarea id="input" name="input" rows="15">{{ text }}</textarea>
+
+    <button
+        type="button"
+        id="btn_conv"
+        onclick="filterAndParse()">
+        🔄 Convert to Inputs
+    </button>
+    {% endif %}
+
+</div>
+
+
+    <!-- div1: قسم إدخال يدوي يظهر دائماً -->
+
+
     <div class="div1">
-        <h3>1️⃣ إدخال يدوي</h3>
+        <h2>SAISIE MANUELLE</h2>
+        <br>
         <form method="post" action="/generate_dxf2" id="dxfForm">
             <div class="points-header">
                 <div>
-                    <span class="points-count" id="pointsCount">0 نقطة</span>
-                    <button type="button" class="select-all-btn" onclick="toggleSelectAll()">☑ تحديد الكل</button>
+                    <span class="points-count" id="pointsCount">POINT(S) TROUVÉ(S) 0</span>
+                    <!--button type="button" class="select-all-btn" onclick="toggleSelectAll()">☑ Tout sélectionner</button-->
                 </div>
             </div>
             <div id="points"></div>
-            <button type="button" onclick="addPoint()">➕ إضافة نقطة</button>
+            <button type="button" class="ajouter" onclick="addPoint()">➕ Ajouter un point</button>
             <br><br>
-            <button type="submit">📥 توليد ملف AutoCAD (DXF)</button>
+            <button type="submit" class="download_dxf">Génération du fichier AutoCAD (DXF)
+</button>
         </form>
     </div>
 
-    <!-- Div2: Upload + OCR Text -->
-    <div class="div2">
-        <h2>Upload Image or PDF</h2>
 
-        <form method="POST" action="/coor" enctype="multipart/form-data" id="uploadForm">
-            <input type="file" name="file" onchange="startLoading(); this.form.submit()">
-                
-            <!-- Loading -->
-            <div id="loadingBox">
-                <div id="loadingBar"></div>
-                <span id="loadingPercent">Loading bar...</span>
-            </div>
-        </form>
 
-        <!-- OCR Text يظهر فقط بعد أن يوجد text -->
-        {% if text %}
-        <h2>OCR Text</h2>
-        <textarea id="input" name="input" rows="15">{{ text }}</textarea>
-        <br>
-        <button type="button" onclick="filterAndParse()">🔄 Convert to Inputs</button>
-        {% endif %}
-    </div>
+
 
 </div>
+
+<footer>
+    <div id="footer">    © 2026 - ARCHILABTOOLS Platform   </div>
+</footer>
 
 <script>
 // متغيرات لتتبع النقاط المحددة
@@ -192,36 +582,38 @@ function deselectAllPoints() {
     updateSelectedCount();
 }
 
-// ===== إضافة نقطة DXF =====
+// ===== إضافة POINT(S) TROUVÉ(S)  DXF =====
 function addPoint(title = "", x = "", y = "") {
     const pointsDiv = document.getElementById("points");
     const div = document.createElement("div");
     div.className = "point";
     div.innerHTML = `
         <input type="checkbox" class="point-checkbox" onclick="handleCheckboxClick(this, event)">
-        Title: <input type="text" name="title[]" value="${title}" placeholder="B.1, WT2..." class="title-input" required>
+        BORNE: <input type="text" name="title[]" value="${title}" placeholder="B.1, WT2..." class="title-input" required>
         X: <input type="number" step="any" name="x[]" value="${x}" class="coord-input" required>
         Y: <input type="number" step="any" name="y[]" value="${y}" class="coord-input" required>
     `;
-    
+
     pointsDiv.appendChild(div);
     updatePointsCount();
 }
+
+
 
 // ===== التعامل مع نقرة checkbox =====
 function handleCheckboxClick(checkbox, event) {
     // منع انتشار الحدث لتجنب إلغاء التحديد عند النقر على checkbox
     event.stopPropagation();
-    
+
     const pointDiv = checkbox.closest('.point');
     const index = Array.from(document.getElementById("points").children).indexOf(pointDiv);
-    
+
     if(event.shiftKey && lastSelectedIndex !== null) {
         // تحديد نطاق من النقاط (Shift + click)
         const start = Math.min(lastSelectedIndex, index);
         const end = Math.max(lastSelectedIndex, index);
         const allPoints = document.querySelectorAll('.point');
-        
+
         for(let i = start; i <= end; i++) {
             const cb = allPoints[i].querySelector('.point-checkbox');
             cb.checked = checkbox.checked;
@@ -234,11 +626,11 @@ function handleCheckboxClick(checkbox, event) {
             }
         }
     } else {
-        // تحديد نقطة واحدة
+        // تحديد POINT(S) TROUVÉ(S)  واحدة
         if(checkbox.checked) {
             // إلغاء تحديد جميع النقاط الأخرى
             deselectAllPoints();
-            // تحديد النقطة الحالية
+            // تحديد الPOINT(S) TROUVÉ(S)  الحالية
             checkbox.checked = true;
             selectedPoints.add(pointDiv);
             pointDiv.classList.add('selected');
@@ -251,7 +643,7 @@ function handleCheckboxClick(checkbox, event) {
             }
         }
     }
-    
+
     updateSelectedCount();
 }
 
@@ -259,10 +651,10 @@ function handleCheckboxClick(checkbox, event) {
 function toggleSelectAll() {
     const allPoints = document.querySelectorAll('.point');
     const someUnselected = Array.from(allPoints).some(point => !selectedPoints.has(point));
-    
+
     // إلغاء تحديد الكل أولاً
     deselectAllPoints();
-    
+
     if(someUnselected) {
         // تحديد الكل
         allPoints.forEach(point => {
@@ -273,7 +665,7 @@ function toggleSelectAll() {
         });
         lastSelectedIndex = null;
     }
-    
+
     updateSelectedCount();
 }
 
@@ -283,11 +675,12 @@ function updateSelectedCount() {
     const pointsCountSpan = document.getElementById("pointsCount");
     const totalPoints = document.querySelectorAll('.point').length;
     if(count > 0) {
-        pointsCountSpan.innerHTML = `${totalPoints} نقطة | ${count} محددة`;
-        pointsCountSpan.style.backgroundColor = "#27ae60";
+        pointsCountSpan.innerHTML = `${totalPoints} POINT(S) TROUVÉ(S)  | ${count} Sélectionné(s)
+`;
+        //pointsCountSpan.style.backgroundColor = "#27ae60";
     } else {
-        pointsCountSpan.innerHTML = `${totalPoints} نقطة`;
-        pointsCountSpan.style.backgroundColor = "#3498db";
+        pointsCountSpan.innerHTML = `${totalPoints} POINT(S) TROUVÉ(S) `;
+        //pointsCountSpan.style.backgroundColor = "#3498db";
     }
 }
 
@@ -296,13 +689,14 @@ function updatePointsCount() {
     const totalPoints = document.querySelectorAll('.point').length;
     const selectedCount = selectedPoints.size;
     const pointsCountSpan = document.getElementById("pointsCount");
-    
+
     if(selectedCount > 0) {
-        pointsCountSpan.innerHTML = `${totalPoints} نقطة | ${selectedCount} محددة`;
-        pointsCountSpan.style.backgroundColor = "#27ae60";
+        pointsCountSpan.innerHTML = `${totalPoints} POINT(S) TROUVÉ(S)  | ${selectedCount} Sélectionné(s)
+`;
+        //pointsCountSpan.style.backgroundColor = "#27ae60";
     } else {
-        pointsCountSpan.innerHTML = `${totalPoints} نقطة`;
-        pointsCountSpan.style.backgroundColor = "#3498db";
+        pointsCountSpan.innerHTML = `${totalPoints} POINT(S) TROUVÉ(S) `;
+        //pointsCountSpan.style.backgroundColor = "#3498db";
     }
 }
 
@@ -312,16 +706,18 @@ function deleteSelectedPoints() {
         alert("⚠️ الرجاء تحديد النقاط التي تريد حذفها أولاً!");
         return;
     }
-    
+
     // تجميع أسماء النقاط للتأكيد
     const titles = [];
     selectedPoints.forEach(point => {
         const titleInput = point.querySelector('.title-input');
         titles.push(titleInput.value);
     });
-    
-    const message = `⚠️ هل أنت متأكد من حذف ${selectedPoints.size} نقطة؟\n\nالنقاط:\n${titles.join('\n')}`;
-    
+
+    const message = `⚠️ Êtes-vous sûr de vouloir supprimer ce point ?`;
+//    const message = ` ⚠️ ⚠️ Êtes-vous sûr de vouloir supprimer ce point ? ${selectedPoints.size} POINT(S) ؟\n\nPOINTT(S):\n${titles.join('\n')}`;
+
+
     if(confirm(message)) {
         selectedPoints.forEach(point => {
             point.remove();
@@ -339,43 +735,43 @@ function moveSelectedPoints(direction) {
         alert("⚠️ الرجاء تحديد النقاط التي تريد تحريكها أولاً!");
         return;
     }
-    
+
     const pointsDiv = document.getElementById("points");
     const allPoints = Array.from(pointsDiv.children);
-    
+
     // تحويل Set إلى Array وفرز حسب الموضع
     const selectedArray = Array.from(selectedPoints);
     selectedArray.sort((a, b) => allPoints.indexOf(a) - allPoints.indexOf(b));
-    
+
     if(direction === 'up') {
-        // التحريك لأعلى: أول نقطة محددة لا يمكن تحريكها لأعلى إذا كانت في البداية
+        // التحريك لأعلى: أول POINT(S) TROUVÉ(S)  محددة لا يمكن تحريكها لأعلى إذا كانت في البداية
         const firstSelectedIndex = allPoints.indexOf(selectedArray[0]);
         if(firstSelectedIndex === 0) {
             alert("⚠️ لا يمكن تحريك النقاط لأعلى أكثر من هذا!");
             return;
         }
-        
-        // تحريك كل نقطة محددة لأعلى
+
+        // تحريك كل POINT(S) TROUVÉ(S)  محددة لأعلى
         for(let i = 0; i < selectedArray.length; i++) {
             const currentIndex = allPoints.indexOf(selectedArray[i]);
             if(currentIndex > 0) {
                 const previousPoint = allPoints[currentIndex - 1];
-                // إذا كانت النقطة السابقة محددة أيضاً، تخطي
+                // إذا كانت الPOINT(S) TROUVÉ(S)  السابقة محددة أيضاً، تخطي
                 if(!selectedPoints.has(previousPoint)) {
                     pointsDiv.insertBefore(selectedArray[i], previousPoint);
                 }
             }
         }
-    } 
+    }
     else if(direction === 'down') {
-        // التحريك لأسفل: آخر نقطة محددة لا يمكن تحريكها لأسفل إذا كانت في النهاية
+        // التحريك لأسفل: آخر POINT(S) TROUVÉ(S)  محددة لا يمكن تحريكها لأسفل إذا كانت في النهاية
         const lastSelectedIndex = allPoints.indexOf(selectedArray[selectedArray.length - 1]);
         if(lastSelectedIndex === allPoints.length - 1) {
             alert("⚠️ لا يمكن تحريك النقاط لأسفل أكثر من هذا!");
             return;
         }
-        
-        // تحريك كل نقطة محددة لأسفل (من الأسفل للأعلى)
+
+        // تحريك كل POINT(S) TROUVÉ(S)  محددة لأسفل (من الأسفل للأعلى)
         for(let i = selectedArray.length - 1; i >= 0; i--) {
             const currentIndex = allPoints.indexOf(selectedArray[i]);
             if(currentIndex < allPoints.length - 1) {
@@ -386,10 +782,10 @@ function moveSelectedPoints(direction) {
             }
         }
     }
-    
+
     // إعادة ترتيب allPoints بعد التغيير
     const newAllPoints = Array.from(pointsDiv.children);
-    
+
     // تحديث المراجع في selectedPoints
     const newSelected = new Set();
     selectedArray.forEach(oldPoint => {
@@ -400,7 +796,7 @@ function moveSelectedPoints(direction) {
     });
     selectedPoints.clear();
     newSelected.forEach(point => selectedPoints.add(point));
-    
+
     updatePointsCount();
     updateSelectedCount();
 }
@@ -427,12 +823,12 @@ function handleKeyboardMove(event) {
 
 // ===== النقر على الصفحة لإلغاء التحديد =====
 function handlePageClick(event) {
-    // التحقق إذا كان النقر على checkbox أو على أي عنصر داخل النقطة
+    // التحقق إذا كان النقر على checkbox أو على أي عنصر داخل الPOINT(S) TROUVÉ(S)
     const isPointElement = event.target.closest('.point');
     const isButton = event.target.closest('button');
     const isTextarea = event.target.closest('textarea');
     const isInput = event.target.closest('input');
-    
+
     // إذا كان النقر على checkbox أو زر أو textarea أو input، لا نلغِ التحديد
     if(isPointElement && event.target.type === 'checkbox') {
         return;
@@ -440,7 +836,7 @@ function handlePageClick(event) {
     if(isButton || isTextarea || isInput) {
         return;
     }
-    
+
     // إلغاء تحديد جميع النقاط
     deselectAllPoints();
 }
@@ -459,48 +855,60 @@ function fixOcrTitles(text){
 }
 
 // ===== تحويل النص إلى نقاط =====
+
 function parseTextareaFromText(text) {
-    if(!text) return;
-    
-    const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l);
+
+    if (!text) return;
+
+    const lines = text
+        .split(/\r?\n/)
+        .map(l => l.trim())
+        .filter(l => l);
+
     document.getElementById("points").innerHTML = "";
     selectedPoints.clear();
-    
+
     let i = 0;
-    
-    while (i < lines.length) {
-        if (isNaN(lines[i]) && i + 2 < lines.length) {
-            const xParts = lines[i + 1].split(/\s+/);
-            const yParts = lines[i + 2].split(/\s+/);
-            
-            if (xParts.length === 2 && yParts.length === 2) {
-                const x = xParts[0] + xParts[1];
-                const y = yParts[0] + yParts[1];
-                const title = lines[i] || "";
-                
-                addPoint(title, x, y);
-                i += 3;
-                continue;
-            }
+
+    while (i < lines.length - 2) {
+
+        const title = lines[i];
+
+        // تنظيف X و Y
+        let x = lines[i + 1].replace(/\s+/g, '');
+        let y = lines[i + 2].replace(/\s+/g, '');
+
+        // التحقق أنهم أرقام
+        const validX = /^[0-9]+(\.[0-9]+)?$/.test(x);
+        const validY = /^[0-9]+(\.[0-9]+)?$/.test(y);
+
+        if (validX && validY) {
+
+            addPoint(title, x, y);
+
+            i += 3;
+
+        } else {
+
+            i++;
         }
-        i++;
     }
-    
+
     updatePointsCount();
 }
 
 // ===== الفلترة والتحويل (الحفاظ على محتوى textarea الأصلي) =====
 async function filterAndParse() {
     const input = document.getElementById("input");
-    
+
     if(!input) return;
-    
+
     // حفظ المحتوى الأصلي
     const originalText = input.value;
-    
+
     // تصحيح OCR
     let correctedText = fixOcrTitles(originalText);
-    
+
     // إرسال للفلترة
     const res = await fetch("/filter2", {
         method: "POST",
@@ -511,17 +919,17 @@ async function filterAndParse() {
             text: correctedText
         })
     });
-    
+
     const data = await res.json();
-    
+
     // تحويل النص المفلتر إلى نقاط فقط
     parseTextareaFromText(data.result);
-    
+
     // رسالة تأكيد
     console.log("تم تحديث النقاط مع الحفاظ على النص الأصلي في textarea");
 }
 
-// ===== إضافة نقطة فارغة جديدة =====
+// ===== إضافة POINT(S) TROUVÉ(S)  فارغة جديدة =====
 function addEmptyPoint() {
     addPoint("", "", "");
 }
@@ -533,10 +941,10 @@ window.onload = () => {
     if(input){
         filterAndParse();
     }
-    
+
     // إضافة مستمع للأحداث للكيبورد
     document.addEventListener('keydown', handleKeyboardMove);
-    
+
     // إضافة مستمع للنقر على الصفحة
     document.addEventListener('click', handlePageClick);
 };
@@ -546,6 +954,275 @@ function startLoading(){
     box.style.display = "block";
 }
 </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+
+    const input = document.getElementById("fileInput");
+    const form = document.getElementById("uploadForm");
+    const dropZone = document.getElementById("dropZone");
+    const fileName = document.getElementById("uploadedFileName");
+    const loadingBox = document.getElementById("loadingBox");
+
+function uploadFile(file){
+
+    fileName.textContent = "📄 " + file.name;
+
+
+    // 🔥 تخزين الاسم باش يبقى محفوظ
+    localStorage.setItem("uploadedFileName", file.name);
+
+    loadingBox.style.display = "block";
+
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    input.files = dt.files;
+
+    setTimeout(() => {
+        form.submit();
+    }, 300);
+}
+
+
+
+    input.addEventListener("change", function(){
+
+        if(this.files.length){
+            uploadFile(this.files[0]);
+        }
+
+    });
+
+    dropZone.addEventListener("dragover", function(e){
+
+        e.preventDefault();
+
+        dropZone.style.borderColor = "#ff9100";
+    });
+
+    dropZone.addEventListener("dragleave", function(){
+
+        dropZone.style.borderColor = "#d6d6d6";
+    });
+
+    dropZone.addEventListener("drop", function(e){
+
+        e.preventDefault();
+
+        dropZone.style.borderColor = "#d6d6d6";
+
+        if(e.dataTransfer.files.length){
+            uploadFile(e.dataTransfer.files[0]);
+        }
+
+    });
+
+});
+
+// 🔥 عند فتح الصفحة رجّع آخر اسم ملف
+window.addEventListener("DOMContentLoaded", function () {
+    const savedName = localStorage.getItem("uploadedFileName");
+
+    if (savedName) {
+         fileName.textContent = "📄 " + savedName;
+
+
+
+    }
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+
+    const input = document.getElementById("fileInput");
+    const form = document.getElementById("uploadForm");
+    const dropZone = document.getElementById("dropZone");
+    const fileName = document.getElementById("uploadedFileName");
+    const loadingBox = document.getElementById("loadingBox");
+
+    function updateFileName(file){
+        // fileName.textContent = "📄 " + file.name;
+        fileName.textContent = "📄  " + file.name + "              En cours de téléchargement . . . ";   //===========================================================================
+
+    }
+
+    function uploadFile(file){
+
+
+        // 👇 عرض الاسم مباشرة
+        updateFileName(file);
+
+        loadingBox.style.display = "block";
+
+        // 👇 نحط الملف داخل input (باش يبقى accessible قبل submit)
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        input.files = dt.files;
+
+        setTimeout(() => {
+            form.submit();
+        }, 300);
+    }
+
+    // 🔥 اختيار من input
+    input.addEventListener("change", function(){
+        if(this.files.length){
+            updateFileName(this.files[0]);
+            uploadFile(this.files[0]);
+        }
+    });
+
+    // 🔥 Drag & Drop
+    dropZone.addEventListener("dragover", function(e){
+        e.preventDefault();
+        dropZone.style.borderColor = "#ff9100";
+    });
+
+    dropZone.addEventListener("dragleave", function(){
+        dropZone.style.borderColor = "#d6d6d6";
+    });
+
+    dropZone.addEventListener("drop", function(e){
+        e.preventDefault();
+        dropZone.style.borderColor = "#d6d6d6";
+
+        if(e.dataTransfer.files.length){
+            uploadFile(e.dataTransfer.files[0]);
+        }
+    });
+
+    // 🔥 IMPORTANT: restore filename after refresh IF file still selected
+    window.addEventListener("load", function () {
+        if (input.files && input.files.length > 0) {
+            updateFileName(input.files[0]);
+        }
+    });
+
+});
+</script>
+
+
+<!-- localstorage du file uploader -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const saved = localStorage.getItem("uploadedFileName");
+    const fileName = document.getElementById("uploadedFileName");
+
+    if (saved && fileName) {
+        fileName.textContent = "📄 Dernier fichier téléchargé : " + saved;
+    }
+
+});
+</script>
+
+
+<!-- limite  -->
+<script>
+    const LIMIT = 13;          //milit_10
+const WINDOW = 24 * 60 * 60 * 1000;
+
+const btn = document.querySelector(".download_dxf");
+
+if (btn) {
+
+    function getLimitData() {
+        return JSON.parse(localStorage.getItem("dxf_limit")) || {
+            count: 0,
+            startTime: null
+        };
+    }
+
+    function saveLimitData(data) {
+        localStorage.setItem("dxf_limit", JSON.stringify(data));
+    }
+
+    function formatTime(ms) {
+        let s = Math.floor(ms / 1000);
+        let h = Math.floor(s / 3600);
+        let m = Math.floor((s % 3600) / 60);
+        let sec = s % 60;
+        return `${h}h ${m}m ${sec}s`;
+    }
+
+    function updateButtonState() {
+        let data = getLimitData();
+        let now = Date.now();
+
+        // reset after 24h
+        if (data.startTime && now - data.startTime > WINDOW) {
+            data = { count: 0, startTime: null };
+            saveLimitData(data);
+        }
+
+        let remaining = LIMIT - data.count;
+
+        if (remaining > 0) {
+            btn.disabled = false;
+            btn.style.background = "";
+            btn.textContent = `🚀 Générer DXF (${remaining} restants)`;
+            return;
+        }
+
+        // LOCK
+        btn.disabled = true;
+        btn.style.background = "gray";
+
+        let end = data.startTime + WINDOW;
+
+        function tick() {
+            let diff = end - Date.now();
+
+            if (diff <= 0) {
+                localStorage.removeItem("dxf_limit");
+                updateButtonState();
+                return;
+            }
+
+            btn.textContent = `⏳ Réessayer dans ${formatTime(diff)}`;
+            requestAnimationFrame(tick);
+        }
+
+        tick();
+    }
+
+    function registerGenerateClick() {
+        let data = getLimitData();
+        let now = Date.now();
+
+        if (!data.startTime) {
+            data.startTime = now;
+        }
+
+        data.count += 1;
+        saveLimitData(data);
+
+        updateButtonState();
+    }
+
+    // CLICK EVENT
+    btn.addEventListener("click", function (e) {
+        registerGenerateClick();
+
+        // si tu veux bloquer backend quand limit atteinte
+        let data = getLimitData();
+        if (data.count > LIMIT) {
+            e.preventDefault();
+            return;
+        }
+    });
+
+    // INIT
+    updateButtonState();
+}
+</script>
+
+
+
+
+
+
 
 </body>
 </html>

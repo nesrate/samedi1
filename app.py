@@ -14,9 +14,31 @@ app.register_blueprint(bp2)
 def index():
     return render_template("index.html")
 
-#if __name__ == "__main__":
-#    app.run(debug=True)
+
+
+
+from flask import Flask, request, jsonify
+import requests
+
+
+GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzUdZmvsDQBSpHAJMKnaUPhvTpGhkJ-vGCDPg4Yc4ruq2wA2zEw-A4kMRRkCVOTitJ9/exec"
+
+
+@app.route('/send-message', methods=['POST'])
+def send_message():
+
+    data = {
+        "your-name": request.form.get("your-name"),
+        "your-number": request.form.get("your-number"),
+        "your-email": request.form.get("your-email"),
+        "message": request.form.get("message")
+    }
+
+    requests.post(GOOGLE_SCRIPT_URL, data=data)
+
+    return "Message sent successfully"
+
+
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
-    
+    app.run(debug=True)
