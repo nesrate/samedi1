@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>Architecture SaaS - Applications DXF</title>
 
     <style>
@@ -345,6 +344,7 @@ inset 0 1px 1px rgba(255, 255, 255, 0.1),
 line-height:1.7;
 
 transition: all 0.2s ease;
+
             /* CENTRAGE */
 
         }
@@ -372,7 +372,11 @@ textarea {
     border-radius: 8px;
 
     background: var(--bleuf);
-    /* color: var(--text);  */
+    color: var(--white);  /**********************************************/
+    font-weight:450;
+    font-size: 18px;
+
+    
 
     outline: none;
     transition: all 0.2s ease;
@@ -422,20 +426,26 @@ textarea:focus {
 
 
         </style>
-
-
 <style>
     /* ===================== CARD ===================== */
 
         #submit{
-          border: none;
-          background-color:var(--bleuf);
-          color: var(--orange);
-          width: 100%;
+          width: 25%;
           cursor: pointer;
-          transition: 0.3s;
-          font-size: 18px;
-          font-weight: bold;        }
+
+               }
+          #submit{
+               padding: 13px 17px;
+                border-radius: 12px;
+                font-size: 14px;
+                font-weight: 600;
+                text-decoration: none;
+                transition: all 0.3s ease;
+                background: linear-gradient(135deg, #ffa602 0%, #926004 100%);    /*            --orange:#ffa602;            --orangef:#926004;         */
+                border: 1px solid rgba(237, 212, 170, 0.3);
+                color: #ffffff;
+                box-shadow: 0 4px 15px rgba(110, 78, 31, 0.35);
+          }
         #submit:hover{
           /* background-color: var(--orange); */
         border-color: var(--orange);   /*#f59e0b*/
@@ -659,14 +669,15 @@ textarea:focus {
     /* object-fit:contain; */
     /* height: 60px; */    }
 
+    #counter{
+        margin-left:70%;
+        margin-top: -20px;
+    }
+
 
 
 </style>
-
-
 <!-- ==============les 2 saas ================= -->
-
-
 <!--style>
             @media (max-width: 700px) {
     body {
@@ -724,10 +735,7 @@ textarea:focus {
 }
 
 </style-->
-
-
 <!-- ==============les 2 saas ================= -->
-
 <style>
 
     @media (max-width: 700px) {
@@ -740,12 +748,18 @@ textarea:focus {
         }
     } 
 
-    @media(max-width: 700px){
+    @media(max-width: 900px){
         #about{     width: 80%;        margin-left: 7%;
         margin-left: auto;
         }
             .about-card{    width: 100%;  margin: auto;     }
-                .features{     width: 100%;   grid-template-columns: repeat(1, 1fr); }
+                .features{     
+                      width: 100%;   grid-template-columns: repeat(1, 1fr); }
+                      .feature-box{
+                        display: flex;
+                        flex-direction: column;   /*un sur autres */
+                        align-items: center;      /*centrer horizentalement */
+                      }
          }
      @media(max-width: 700px){
         .container{     width: 100%;           }
@@ -765,8 +779,8 @@ textarea:focus {
     }
 
     .card{
-        flex: 0 1 80%;
-        max-width: 80%;
+        flex: 0 1 75%;
+        max-width: 600px;
         margin: auto;
     }
 
@@ -813,13 +827,9 @@ textarea:focus {
          NAVBAR
     ========================== -->
 
-    <nav class="navbar">
+<nav class="navbar">
         <div class="nav-container">
-
-            <!-- LOGO -->
-            <!-- <a href="/" class="logo"> -->
-                            <a href="#heros" class="logo">
-
+                 <a href="#heros" class="logo">
                 <img src="/static/logo-200.png" alt="Logo">
                 <span>ARCHILABTOOLS</span>
             </a>
@@ -827,134 +837,82 @@ textarea:focus {
             <!-- MENU -->
             <div class="nav-links">
                 <a href="#about">About Us</a>
-                <!--a href="#privacy">Privacy Policy</a-->
                 <a href="#contact">Contact</a>
             </div>
 
         </div>
-    </nav>
-
-    <!-- =========================
-         HERO SECTION
-    ========================== -->
-
-                    <section class="hero" id="heros">
-                <div class="hero-top">
-                    <h1>
-                        Plateforme Architecture <br>
-                        2D & 3D
-                    </h1>
-
-                    <p>
-                        Transformez une simple liste de bornes ou un plan 2D en plans cadastraux précis
-                        et en plans masse 3D automatiques grâce à l’intelligence artificielle
-                        et l’automatisation géomatique.
-                    </p>
-                </div>
-                    </section>
+</nav>
 
 
+<section class="hero" id="heros">
+    <div class="hero-top">
+        <h1>
+            Plateforme Architecture <br>
+            2D & 3D
+        </h1>
+        <p>
+            Transformez une simple liste de bornes ou un plan 2D en plans cadastraux précis
+            et en plans masse 3D automatiques grâce à l’intelligence artificielle
+            et l’automatisation géomatique.
+        </p>
+    </div>
+</section>
 
 
+<div class="cards">
+    <!-- CARD 1 -->
+    <div class="card">
+        <div class="card-icon">
+            <img src="/static/logo_coor.png" alt="Construction Icon" class="icon-img">
+        </div>
+        <h2>
+            Saisie Automatique des Coordonnées Lambert & Génération de Fichiers CAO
+        </h2>
+        <p>
+            Transformez rapidement vos tableaux de coordonnées Lambert en fichiers CAO exploitables sur AutoCAD,
+            Revit, Civil 3D, 3ds Max et d’autres logiciels de conception.
+        </p>
+        <a href="/coor" class="btn">
+            Ouvrir l'application
+        </a>
+    </div>
+    <!-- CARD 2 -->
+    <div class="card">
+        <div class="card-icon">
+            <img src="/static/logo_2d3d.png" alt="Construction Icon" class="icon-img">
+        </div>
+        <h2>
+            Plan Masse : Conversion 2D vers 3D CAO
+        </h2>
+        <p>
+            Transformez vos plans masse 2D en modèles 3D professionnels prêts pour les logiciels CAO.
+            Notre service génère automatiquement un plan masse 3D précis à partir de vos fichiers 2D,
+            compatible avec AutoCAD, Revit, 3ds Max et autres outils BIM et DAO.
+        </p>
+        <a href="/2d3d" class="btn">
+            Ouvrir l'application
+        </a>
+     </div>
+</div>
 
 
+<div id="about">
+<section class="about-card">
+    <br>
+    <h2>À Propos Nous</h2>
+    <p>
+        Nous sommes une équipe d’experts en architecture, urbanisme et design intérieur,
+        avec jusqu’à 20 ans d’expérience dans les solutions de conception numérique.
+        Nous développons une plateforme en ligne permettant de simplifier et d’accélérer les services architecturaux,
+        en rendant les outils professionnels accessibles partout dans le monde en moins d’une minute.
+    </p>
+    <p>
+        Nos solutions couvrent la conversion du tableau de bornage en plan cadastral et la conversion de plans 2D en modèles 3D,
+        à destination des architectes, ingénieurs et promoteurs immobiliers.
+    </p>
+    <div class="features">
 
-                <!-- APPLICATIONS -->
-                <div class="cards">
-
-                    <!-- CARD 1 -->
-                    <div class="card">
-
-                        <div class="card-icon">
-                            <img src="/static/logo_coor.png" alt="Construction Icon" class="icon-img">
-                        </div>
-
-                        <h2>
-                            Saisie Automatique des Coordonnées Lambert & Génération de Fichiers CAO
-                        </h2>
-
-                        <p>
-                            Transformez rapidement vos tableaux de coordonnées Lambert en fichiers CAO exploitables sur AutoCAD,
-                            Revit, Civil 3D, 3ds Max et d’autres logiciels de conception.
-                        </p>
-
-                        <a href="/coor" class="btn">
-                            Ouvrir l'application
-                        </a>
-
-                    </div>
-
-                    <!-- CARD 2 -->
-                    <div class="card">
-
-                        <div class="card-icon">
-                            <img src="/static/logo_2d3d.png" alt="Construction Icon" class="icon-img">
-                        </div>
-
-                        <h2>
-                            Plan Masse : Conversion 2D vers 3D CAO
-                        </h2>
-
-                        <p>
-                            Transformez vos plans masse 2D en modèles 3D professionnels prêts pour les logiciels CAO.
-                            Notre service génère automatiquement un plan masse 3D précis à partir de vos fichiers 2D,
-                            compatible avec AutoCAD, Revit, 3ds Max et autres outils BIM et DAO.
-                        </p>
-
-                        <a href="/2d3d" class="btn">
-                            Ouvrir l'application
-                        </a>
-
-                    </div>
-
-                </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                <!-- === ABOUT US====== -->
-                <div id="about">
-
-                    <!--div class="about-header">
-                    </div-->
-
-                    <section class="about-card">
-                        <br>
-
-                        <h2>À Propos Nous</h2>
-
-                        <p>
-                            Nous sommes une équipe d’experts en architecture, urbanisme et design intérieur,
-                            avec jusqu’à 20 ans d’expérience dans les solutions de conception numérique.
-
-                            Nous développons une plateforme en ligne permettant de simplifier et d’accélérer les services architecturaux,
-                            en rendant les outils professionnels accessibles partout dans le monde en moins d’une minute.
-                        </p>
-
-
-
-                        <p>
-                            Nos solutions couvrent la conversion du tableau de bornage en plan cadastral et la conversion de plans 2D en modèles 3D,
-                            à destination des architectes, ingénieurs et promoteurs immobiliers.
-
-                        </p>
-
-                        <div class="features">
-
-                            <div class="feature-box">
+    <div class="feature-box">
                                 <div class="badge-icon">⚡</div>
                                
 
@@ -998,11 +956,10 @@ textarea:focus {
 
 
 
-                        </div>
+    </div>
 
-                    </section>
-
-                </div>
+</section>
+</div>
 
 
 
@@ -1012,25 +969,61 @@ textarea:focus {
     ========================== -->
 
     <footer>
-
-
-                <div id="contact">
+        <br>
+<div id="contact">
                     <br>
-                      <div class="container">
-                        <form method="post" action="/send-message"  name="contact-form">
+                <div class="container">
 
-                         <h4>Contact Us</h4>
+
+                <form method="post" action="/send-message" name="contact-form">
+        <h4>Contact Us</h4>
+        <input type="text"
+               name="your-name"
+               placeholder="Name"
+               minlength="2"
+               maxlength="50"
+               required>
+
+        <input type="text"
+               name="your-number"
+               placeholder="Number"
+               minlength="2"
+               maxlength="20"
+               required>
+
+        <input type="email"
+               name="your-email"
+               placeholder="Email"
+               maxlength="100"
+               required>
+        <textarea
+                id="message"
+                name="message"
+                rows="7"
+                placeholder="Your Message"
+                minlength="2"
+                maxlength="750"
+                required></textarea>
+
+            <p id="counter">0 / 750</p>
+
+        <input type="submit" value="Submit" id="submit">
+    </form>
+
+                        <!-- <form method="post" action="/send-message"  name="contact-form">
+                          <h4>Contact Us</h4>
                          <input type="text" name="your-name" placeholder="Name" required>
                          <input type="text" name="your-number" placeholder="Number" required>
                          <input type="email" name="your-email" placeholder="Email" required>
                          <textarea name="message" rows="7" placeholder="Your Message" required></textarea>
                          <input type="submit" value="Submit" id="submit">
 
-                        </form>
-                      </div>
+                        </form>    -->
+</div>
 
 
                 </div>
+                                </div>
 
         <br><br><br>
 
@@ -1039,7 +1032,35 @@ textarea:focus {
     </footer>
 
 
-    <script>
+
+<!-- counter les lettre de message -->
+<script>
+    const message = document.getElementById("message");
+const counter = document.getElementById("counter");
+
+message.addEventListener("input", () => {
+    counter.textContent = `${message.value.length} / 750`;
+});
+</script>
+
+
+<!-- <script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+    const message = document.getElementById("message");
+    const counter = document.getElementById("counter");
+
+    if (message && counter) {
+        message.addEventListener("input", () => {
+            counter.textContent = `${message.value.length} / 750`;
+        });
+    }
+
+});
+</script> -->
+
+
+<script>
 const form = document.forms['contact-form'];
 
 form.addEventListener('submit', async (e) => {

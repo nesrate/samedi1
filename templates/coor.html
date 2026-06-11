@@ -77,14 +77,14 @@
         inset 0 1px 1px rgba(255, 255, 255, 0.1),
         0 20px 40px rgba(0, 0, 0, 0.4);
 
-        line-height:1.7;
+        line-height:1.5;
         border-radius:25px;
         text-align: center;   }
     
         .div2{
-        margin-top: 50px;    }
+        margin-top: 25px;    }
     .div1{
-        margin-top: 50px;       }
+        margin-top: 15px;       }
     .div1 h2{
        color: var(--orange);    }
     .div2 h2{
@@ -159,7 +159,7 @@ scale: 1.02;   }
         gap:10px;
         width:100%;
         padding:12px;
-        border:1px solid var(--bleuc);
+        border:1px solid var(--orange);
         border-radius:12px;
         /*background:#e6ffc3;    /*fff*/
         margin-bottom:15px;    }
@@ -167,7 +167,7 @@ scale: 1.02;   }
         padding:4px 10px;
         border-radius:5px;
         /*background: #e6ffc3;  /*e7e7e7*/
-        color:var(--bleuc);
+        color:var(--orange);
 
         font-size:18px;    }
  /* .select-all-btn{
@@ -195,6 +195,7 @@ scale: 1.02;   }
         transition:0.2s;
         border:1px solid var(--bleuc);
         background:var(--bleuF);
+        color: var(--white);
         flex-wrap:wrap;    }
 .point:hover{
         border-color:var(--orange);    }       
@@ -236,7 +237,8 @@ scale: 1.02;   }
     width:100%;
     margin:20px 0;
     /* background-color: #777; */
-    margin-bottom: -70px;}
+     margin-bottom: -70px; 
+}
 
 /*----------------------------------------*/
 /* #uploadForm input[type="file"]::file-selector-button{
@@ -436,7 +438,7 @@ scale: 1.02;   }
 /* titre de la page */
 .mypage{
     color: var(--orange);
-    margin-top: 150px;
+    margin-top: 100px;
     text-align: center;}
 
 </style>
@@ -455,6 +457,7 @@ scale: 1.02;   }
         /* margin: auto; */
     }
 }
+
 
 </style>
 
@@ -485,9 +488,9 @@ scale: 1.02;   }
 <div class="div2">
 
     <h2>        SAISIR AUTOMATIQUEMENT  </h2>
-    <br>
+    
     <h4>        MES COORDONNÉES À PARTIR UNE IMAGE OU UN FICHIER PDF    </h4>
-    <br>
+    
 
     <form method="POST" action="/coor" enctype="multipart/form-data" id="uploadForm">
 
@@ -507,15 +510,16 @@ scale: 1.02;   }
                 ou cliquez pour sélectionner
             </div>
 
+            <div id="loadingBox">
+                <div id="loadingBar"></div>
+            </div>
+            
             <div id="uploadedFileName"></div>
 
         </label>
 
         <input type="file" id="fileInput" name="file">
 
-        <div id="loadingBox">
-            <div id="loadingBar"></div>
-        </div>
 
     </form>
 
@@ -549,7 +553,7 @@ scale: 1.02;   }
             <div id="points"></div>
             <button type="button" class="ajouter" onclick="addPoint()">➕ Ajouter un point</button>
             <br><br>
-            <button type="submit" class="download_dxf">Génération du fichier AutoCAD (DXF)
+            <button type="submit" class="download_dxf" >Génération du fichier AutoCAD (DXF)
 </button>
         </form>
     </div>
@@ -954,7 +958,7 @@ function startLoading(){
     box.style.display = "block";
 }
 </script>
-
+<!-- ++++++++++++++++++ -->
 <script>
 document.addEventListener("DOMContentLoaded", function(){
 
@@ -1031,7 +1035,7 @@ window.addEventListener("DOMContentLoaded", function () {
     }
 });
 </script>
-
+<!-- ++++++++++++++++++++++ -->
 <script>
 document.addEventListener("DOMContentLoaded", function(){
 
@@ -1101,8 +1105,6 @@ document.addEventListener("DOMContentLoaded", function(){
 
 });
 </script>
-
-
 <!-- localstorage du file uploader -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
@@ -1117,15 +1119,15 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
-
-<!-- limite  -->
+<!-- limite téléchargement + redirection -->
 <script>
-    const LIMIT = 13;          //milit_10
+const LIMIT = 13;
 const WINDOW = 24 * 60 * 60 * 1000;
 
+const form = document.getElementById("dxfForm");
 const btn = document.querySelector(".download_dxf");
 
-if (btn) {
+if (form && btn) {
 
     function getLimitData() {
         return JSON.parse(localStorage.getItem("dxf_limit")) || {
@@ -1146,11 +1148,35 @@ if (btn) {
         return `${h}h ${m}m ${sec}s`;
     }
 
+    function canGenerate() {
+        let data = getLimitData();
+        let now = Date.now();
+
+        if (data.startTime && now - data.startTime > WINDOW) {
+            data = { count: 0, startTime: null };
+            saveLimitData(data);
+        }
+
+        return data.count < LIMIT;
+    }
+
+    function incrementCounter() {
+        let data = getLimitData();
+        let now = Date.now();
+
+        if (!data.startTime) {
+            data.startTime = now;
+        }
+
+        data.count += 1;
+        saveLimitData(data);
+        updateButtonState();
+    }
+
     function updateButtonState() {
         let data = getLimitData();
         let now = Date.now();
 
-        // reset after 24h
         if (data.startTime && now - data.startTime > WINDOW) {
             data = { count: 0, startTime: null };
             saveLimitData(data);
@@ -1165,13 +1191,12 @@ if (btn) {
             return;
         }
 
-        // LOCK
         btn.disabled = true;
         btn.style.background = "gray";
 
         let end = data.startTime + WINDOW;
 
-        function tick() {
+        function updateTimer() {
             let diff = end - Date.now();
 
             if (diff <= 0) {
@@ -1181,48 +1206,61 @@ if (btn) {
             }
 
             btn.textContent = `⏳ Réessayer dans ${formatTime(diff)}`;
-            requestAnimationFrame(tick);
+            setTimeout(updateTimer, 1000);
         }
 
-        tick();
+        updateTimer();
     }
 
-    function registerGenerateClick() {
-        let data = getLimitData();
-        let now = Date.now();
-
-        if (!data.startTime) {
-            data.startTime = now;
-        }
-
-        data.count += 1;
-        saveLimitData(data);
-
-        updateButtonState();
-    }
-
-    // CLICK EVENT
-    btn.addEventListener("click", function (e) {
-        registerGenerateClick();
-
-        // si tu veux bloquer backend quand limit atteinte
-        let data = getLimitData();
-        if (data.count > LIMIT) {
-            e.preventDefault();
+    // GESTION DU FORMULAIRE
+    form.addEventListener("submit", function(e) {
+        e.preventDefault(); // Empêcher l'envoi normal
+        
+        // Vérifier la limite
+        if (!canGenerate()) {
+            alert(`❌ Limite atteinte! Maximum ${LIMIT} téléchargements par 24h.`);
             return;
         }
+        
+        // Incrémenter le compteur
+        incrementCounter();
+        
+        // Désactiver le bouton
+        btn.disabled = true;
+        btn.textContent = "⏳ Génération en cours...";
+        
+        // Envoyer avec fetch
+        const formData = new FormData(form);
+        
+        fetch('/generate_dxf2', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.blob())
+        .then(blob => {
+            // Télécharger le fichier
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'النقاط.dxf';
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            // Rediriger
+            window.location.href = '/coor';
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+            alert('❌ Erreur lors de la génération du fichier');
+            // Réactiver le bouton en cas d'erreur
+            updateButtonState();
+        });
     });
 
     // INIT
     updateButtonState();
 }
 </script>
-
-
-
-
-
-
 
 </body>
 </html>
