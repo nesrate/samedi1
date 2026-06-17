@@ -2,6 +2,12 @@ from flask import Flask, render_template
 from route1 import bp1  # ou le nom de votre fichier blueprint
 from route2 import bp2  # ou le nom de votre fichier blueprint
 
+from flask import send_from_directory
+
+@app.route('/sitemap.xml')
+def sitemap():
+    return send_from_directory('static', 'sitemap.xml')
+
 app = Flask(__name__)
 
 #app.register_blueprint(bp)
